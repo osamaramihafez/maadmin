@@ -1,3 +1,5 @@
+// This is the node file, this is where are all of the http requests are handled
+// and where the database is accessed
 var port = 3000;
 
 var express = require('express');
