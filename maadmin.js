@@ -35,7 +35,7 @@ var league = new leagueModel.League(2);
 
 app.post('/maadmin/api/addTeam',function(req,res){
     requests.push(req)
-    var team = new leagueModel.Team(req.body.teamName, req.body.division)
+    var team = new leagueModel.Team(req.body.teamName, req.body.division, req.body.captain);
     console.log(team)
     league.addTeam(team.div, team);
     console.log(league.getTeams());
@@ -46,12 +46,7 @@ app.post('/maadmin/api/addTeam',function(req,res){
 
 app.post('/maadmin/api/addPlayer',function(req,res){
   requests.push(req)
-  var body = req.body
-  var team = {
-    name: req.body.teamName,
-    division: req.body.division
-  }
-  db.teams[req.body.teamName] = team;
+  var team = new leagueModel.Team(req.body.teamName, req.body.division, req.body.captain);
   console.log(db);
   res.json(db);
 });

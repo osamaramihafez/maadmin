@@ -1,24 +1,35 @@
 
 
 class Team{
-    constructor(name, div){
+    constructor(name, div, captain){
         this.name = name;
         this.div = div;
+        this.captain = captain;
+    }
+    getName(){
+        return this.name;
+    }
+    getCaptain(){
+        return this.captain;
+    }
+    getDivision(){
+        return this.div;
     }
 }
 
 class League{
     constructor(numDivs){
         this.divisions = [];
+        this.teams = {};
         for (var i = 0; i<numDivs; i++){
             this.divisions.push(new Division(`D${i+1}`));
         }
     }
     addTeam(div, team){
-        this.divisions[div].addTeam(team);
+        this.teams[this.divisions[div].addTeam(team)] = team;
     }
     getTeams(){
-        return this.divisions[0].teams + this.divisions[1].teams
+        return {...this.divisions[0].teams, ...this.divisions[1].teams}
     }
 }
 
@@ -27,7 +38,7 @@ class Division{
         this.numTeams = 0;
         this.totalMatches = 0;
         this.id = id;
-        this.teams = [];
+        this.teams = {};
         this.matches = [];
         this.teamMatches = {}
     }
@@ -62,8 +73,7 @@ class Division{
             console.log(`It is ${this.matches.length == this.totalMatches} that the length of
                         the matches list is equivelant to the total number of matches.`);
         }
-        this.teams.push(team);
-        // console.log(this.matches);
+        this.teams[team.getName()] = team;
     }
 }
 

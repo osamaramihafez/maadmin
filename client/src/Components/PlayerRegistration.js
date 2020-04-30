@@ -81,22 +81,14 @@ export class TeamRegistration extends Component {
 
     render() {
         return (
-            <div className="TeamRegistration">
-                <h2>Add a new team</h2>
+            <div className="PlayerRegistration">
+                <h2>Add a new player</h2>
                 <hr></hr>
-                <h5>Captain info</h5>
-                <label>First Name: </label> <input type='text' name='captainFirstName' onChange={this.handleFirstName.bind(this)}></input>
-                <label>Last Name: </label> <input type='text' name='captainLastName' onChange={this.handleLastName.bind(this)}></input>
-                <label>Phone #: </label> <input type='tel' name='captainPhone' onChange={this.handlePhone.bind(this)}></input>
-                <label>Email: </label> <input type='email' name='captainEmail' onChange={this.handleEmail.bind(this)}></input>
-                <hr></hr>
-                <h5>Team info</h5>
-                <label>Team Name: </label> <input type='text' name='teamName' onChange={this.handleTeamName.bind(this)}></input>
-                <label>Division: </label>
-                <select name="teamDivision" onChange={this.handleDivision.bind(this)}>
-                    <option>1</option>
-                    <option>2</option>
-                </select>
+                <h5>Player info</h5>
+                <label>First Name: </label> <input type='text' name='FirstName' onChange={this.handleFirstName.bind(this)}></input>
+                <label>Last Name: </label> <input type='text' name='LastName' onChange={this.handleLastName.bind(this)}></input>
+                <label>Phone #: </label> <input type='tel' name='Phone' onChange={this.handlePhone.bind(this)}></input>
+                <label>Email: </label> <input type='email' name='Email' onChange={this.handleEmail.bind(this)}></input>
                 <hr></hr>
                 {/* For some reason, the bootstrap isn't working,
                 but we're just looking for functionality rn so it's okay */}

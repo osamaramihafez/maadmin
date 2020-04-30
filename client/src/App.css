@@ -1,5 +1,6 @@
 .App {
   text-align: center;
+  color: white;
 }
 
 .App-logo {
@@ -26,6 +27,18 @@
 
 .App-link {
   color: #61dafb;
+}
+
+.TeamRegistration{
+ display: inline-block; 
+}
+
+.PlayerRegistration{
+  display: inline-block;
+}
+
+.Registration{
+  margin: 30px;
 }
 
 @keyframes App-logo-spin {
