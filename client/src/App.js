@@ -1,13 +1,15 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { Component } from 'react'
+import TeamRegistration from './Components/TeamRegistration';
+import './App.css'
 
-function App() {
-  return (
-    <div className="App">
-      
-    </div>
-  );
+export class App extends Component {
+  render() {
+    return (
+      <div className="App">
+        <TeamRegistration></TeamRegistration>
+      </div>
+    )
+  }
 }
 
-export default App;
+export default App
