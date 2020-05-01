@@ -82,18 +82,18 @@ class Match{
     constructor(team1, team2){
         // this.id = id;
         this.played = false;
-        this.team1; // actual teams or a string?
-        this.team2;
-        this.score1 = 0;
-        this.score2 = 0;
+        this.home; // actual teams or a string?
+        this.away;
+        this.homeScore = 0;
+        this.awayScore = 0;
         // this.time;
         // this.date;
         // this.location;
     }
     playMatch(score1, score2){
         this.played = true;
-        this.score1 = score1;
-        this.score2 = score2;
+        this.homeScore = score1;
+        this.awayScore = score2;
     }
 }
 

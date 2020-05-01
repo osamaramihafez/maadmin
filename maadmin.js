@@ -5,7 +5,7 @@ var port = 3001;
 var express = require('express');
 var path = require('path');
 var bodyParser = require('body-parser');
-var leagueModel = require('./model/model.js');
+var maadmin = require('./model/model.js');
 
 var app = express();
 app.use(express.static(path.join(__dirname, 'build')));
@@ -30,12 +30,12 @@ var db = {
 };
 var requests = []
 
-var league = new leagueModel.League(2);
+var league = new maadmin.League(2);
 // console.log(league); 
 
 app.post('/maadmin/api/addTeam',function(req,res){
     requests.push(req)
-    var team = new leagueModel.Team(req.body.teamName, req.body.division, req.body.captain);
+    var team = new maadmin.Team(req.body.teamName, req.body.division, req.body.captain);
     console.log(team)
     league.addTeam(team.div, team);
     console.log(league.getTeams());
@@ -46,7 +46,21 @@ app.post('/maadmin/api/addTeam',function(req,res){
 
 app.post('/maadmin/api/addPlayer',function(req,res){
   requests.push(req)
-  var team = new leagueModel.Team(req.body.teamName, req.body.division, req.body.captain);
+  var team = new maadmin.Team(req.body.teamName, req.body.division, req.body.captain);
+  console.log(db);
+  res.json(db);
+});
+
+app.post('/maadmin/api/getLeague',function(req,res){
+  requests.push(req)
+  var team = new maadmin.Team(req.body.teamName, req.body.division, req.body.captain);
+  console.log(db);
+  res.json(db);
+});
+
+app.post('/maadmin/api/createLeague',function(req,res){
+  requests.push(req)
+  var team = new maadmin.League(2);
   console.log(db);
   res.json(db);
 });
