@@ -2,10 +2,21 @@
 // and where the database is accessed
 var port = 3001;
 
-var express = require('express');
-var path = require('path');
-var bodyParser = require('body-parser');
-var maadmin = require('./model/model.js');
+const express = require('express');
+const path = require('path');
+const bodyParser = require('body-parser');
+const maadmin = require('./model/model.js');
+const Client = require('pg').Client;
+const client = new Client({
+  user: 'osama',
+  password: 'marchmallow',
+  host: 'localhost',
+  port: 5432,
+  database: 'maadmin'
+})
+client.connect()
+.then(() => console.log('Connected to db successfully'))
+.catch(e => console.log(e));
 
 var app = express();
 app.use(express.static(path.join(__dirname, 'build')));
@@ -32,6 +43,17 @@ var requests = []
 
 var league = new maadmin.League(2);
 // console.log(league); 
+
+app.get('/maadmin/api/login/:username', function(req, res){
+  var username = req.params.username;
+  var sql = 'SELECT password FROM admin WHERE username=$1;';
+  client.query(sql, [username]).then(result => {
+    console.log(result);
+  }).catch(e => {
+    console.log("Username likely doesn't exist");
+    console.log(e);
+  }).finally(() => client.end());
+})
 
 app.post('/maadmin/api/addTeam',function(req,res){
     requests.push(req)
