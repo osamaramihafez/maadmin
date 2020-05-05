@@ -8,8 +8,8 @@ const bodyParser = require('body-parser');
 const maadmin = require('./model/model.js');
 const Client = require('pg').Client;
 const client = new Client({
-  user: 'osama',
-  password: 'marchmallow',
+  user: 'maadmin',
+  password: 'VeryG00dPa$$word',
   host: 'localhost',
   port: 5432,
   database: 'maadmin'
