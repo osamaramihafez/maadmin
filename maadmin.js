@@ -44,15 +44,30 @@ var requests = []
 var league = new maadmin.League(2);
 // console.log(league); 
 
-app.get('/maadmin/api/login/:username', function(req, res){
+app.get('/maadmin/api/login/:username/:password', function(req, res){
   var username = req.params.username;
+  var password = req.params.password;
+  // var username = 'maadmin';
+  console.log(username);
   var sql = 'SELECT password FROM admin WHERE username=$1;';
   client.query(sql, [username]).then(result => {
-    console.log(result);
+    console.log(result.rows);
+    var correctPass = result.rows[0].password;
+    console.log(correctPass)
+    var login = {
+      success: true
+    }
+    if (password === correctPass){  
+      res.json(login);
+      return;
+    }
+    login.success = false
+    res.json(login)
   }).catch(e => {
-    console.log("Username likely doesn't exist");
+    console.log("\n*Some sort of error*\n");
     console.log(e);
-  }).finally(() => client.end());
+    res.json(e);
+  })
 })
 
 app.post('/maadmin/api/addTeam',function(req,res){
