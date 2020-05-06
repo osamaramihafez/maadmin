@@ -26,24 +26,13 @@ app.listen(port, function () {
     console.log('maadmin app listening on port '+port);
 });
 
-//CRUD cheatsheet
-// Create  
-// Read 
-// Update 
-// Delete 
+//CRUD cheatsheet:
+// Create  POST
+// Read    GET
+// Update  PUT
+// Delete  DELETE
 
-// All API requests can be seen below
-// First attempt, we won't access a database, we'll treat a list as our database.
-
-var db = {
-  teams: {},
-  players: {}
-};
-var requests = []
-
-var league = new maadmin.League(2);
-// console.log(league); 
-
+//All API requests can be seen below:
 app.get('/maadmin/api/login', function(req, res){
   var username = req.body.username;
   var password = req.body.password;
@@ -53,6 +42,10 @@ app.get('/maadmin/api/login', function(req, res){
   var sql = 'SELECT password FROM admin WHERE username=$1;';
   client.query(sql, [username]).then(result => {
     console.log(result.rows);
+    if (result.rows[0] == null){
+      res.json({success: false});
+      return
+    }
     var correctPass = result.rows[0].password;
     console.log(correctPass)
     var login = {
@@ -71,22 +64,92 @@ app.get('/maadmin/api/login', function(req, res){
   })
 })
 
+function addTeam(teamName, division){
+  var sql = 'INSERT INTO team (teamName, division) VALUES ($1, $2);';
+  client.query(sql, [teamName, division]).then(result => {
+    console.log(result.rows);
+    var correctPass = result.rows[0].password;
+    console.log(correctPass)
+    var login = {
+      success: true
+    }
+    if (password === correctPass){  
+      return login;
+    }
+    login.success = false
+    return login
+  }).catch(e => {
+    console.log("\n*Some sort of error*\n");
+    console.log(e);
+    return e;
+  })
+}
+
+function addPlayer(fn, ln, p, e){
+  var sql = 'INSERT INTO player (firstName, lastName, phone, email) VALUES ($1, $2, $3, $4);';
+  client.query(sql, [fn, ln, p, e]).then(result => {
+    console.log(result.rows);
+    result.rows[0];
+    console.log(correctPass)
+    var login = {
+      success: true
+    }
+    if (password === correctPass){  
+      return login;
+    }
+    login.success = false
+    return login
+  }).catch(e => {
+    console.log("\n*Some sort of error*\n");
+    console.log(e);
+    return e;
+  })
+}
+
+function connectTeamPlayer(teamId, playerId, isCap){
+  var sql = 'INSERT INTO team (teamName, division) VALUES ($1, $2);';
+  client.query(sql, [teamName, division]).then(result => {
+    console.log(result.rows);
+    var correctPass = result.rows[0].password;
+    console.log(correctPass)
+    var login = {
+      success: true
+    }
+    if (password === correctPass){  
+      return login;
+    }
+    login.success = false
+    return login
+  }).catch(e => {
+    console.log("\n*Some sort of error*\n");
+    console.log(e);
+    return e;
+  })
+}
+
+
 app.post('/maadmin/api/addTeam',function(req,res){
-    requests.push(req)
-    var team = new maadmin.Team(req.body.teamName, req.body.division, req.body.captain);
-    console.log(team)
-    league.addTeam(team.div, team);
-    console.log(league.getTeams());
-    db.teams[req.body.teamName] = team;
-    console.log(db);
-    res.json(db);
+  var capFirst = req.body.firstName;
+  var capLast = req.body.lastName;
+  var phone = req.body.phone;
+  var email = req.body.email;
+  var teamName = req.body.teamName;
+  var division = req.body.division;
+  
+  var resultTeam = addTeam(teamName, division)
+  var resultPlayer = addPlayer(capFirst, capLast, phone, email)
+  var resultTeamPlayer = connetTeamPlayer(resultTeam.id, resultPlayer.id, true)
+  
+  res.set('Access-Control-Allow-Origin', '*');
+  res.json({...resultTeam, ...resultPlayer});
 });
 
 app.post('/maadmin/api/addPlayer',function(req,res){
-  requests.push(req)
-  var team = new maadmin.Team(req.body.teamName, req.body.division, req.body.captain);
-  console.log(db);
-  res.json(db);
+  var capFirst = req.body.firstName;
+  var capLast = req.body.lastName;
+  var phone = req.body.phone;
+  var email = req.body.email;
+  res.json({status:"This ain't ready yet."});
 });
 
 app.post('/maadmin/api/getLeague',function(req,res){

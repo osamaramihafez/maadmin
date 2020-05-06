@@ -1,19 +1,23 @@
 CREATE TABLE team
 (
-  teamId           INTEGER         NOT NULL PRIMARY KEY, 
+  teamId           SERIAL, 
   teamName         VARCHAR(20)    NOT NULL, 
   division          INTEGER         NOT NULL,  
-  points            INTEGER         NOT NULL, 
-  fixturesPlayed   INTEGER         NOT NULL, 
-  wins              INTEGER         NOT NULL,
-  loses             INTEGER         NOT NULL,
-  draws             INTEGER         NOT NULL,
-  goalsScored      INTEGER         NOT NULL,
-  goalsAllowed     INTEGER         NOT NULL,
-  goalDifferential INTEGER         NOT NULL,
+  points            INTEGER  DEFAULT 0, 
+  fixturesPlayed   INTEGER   DEFAULT 0, 
+  wins              INTEGER  DEFAULT 0,
+  losses             INTEGER  DEFAULT 0,
+  draws             INTEGER  DEFAULT 0,
+  goalsFor          INTEGER  DEFAULT 0,
+  goalsAgainst     INTEGER   DEFAULT 0,
+  goalDifferential INTEGER   DEFAULT 0,
 
-  CONSTRAINT teamNunq UNIQUE (teamName)
+  CONSTRAINT teamPk PRIMARY KEY (teamId)
 );
+
+CREATE TABLE division{
+  divID VARCHAR(20) NOT NULL PRIMARY KEY
+}
 
 CREATE TABLE admin
 (
@@ -23,35 +27,32 @@ CREATE TABLE admin
 
 CREATE TABLE player
 (
-  playerId INTEGER NOT NULL PRIMARY KEY, 
+  playerId INTEGER PRIMARY KEY, 
   firstName VARCHAR(20) NOT NULL, 
   lastName VARCHAR(30) NOT NULL, 
   age INTEGER NOT NULL,
-  teamId INTEGER NOT NULL,
-  goals INTEGER NOT NULL, 
-  assists INTEGER NOT NULL, 
-  yellowCards INTEGER NOT NULL, 
-  redCards INTEGER NOT NULL, 
-  appearances INTEGER NOT NULL,
-  email VARCHAR(50) NOT NULL,
-  phoneNumber VARCHAR(50) NOT NULL,
-
-  CONSTRAINT teamPlayerFk FOREIGN KEY (teamId) REFERENCES team (teamId)
+  goals INTEGER DEFAULT 0,
+  assists INTEGER DEFAULT 0,
+  yellowCards INTEGER DEFAULT 0,
+  redCards INTEGER DEFAULT 0,
+  appearances INTEGER DEFAULT 0,
+  email VARCHAR(50),
+  phoneNumber VARCHAR(50) NOT NULL
 );
 
 CREATE TABLE match 
 (
   matchId INTEGER NOT NULL PRIMARY KEY,
-  locationId INTEGER NOT NULL, 
-  positionId INTEGER NOT NULL,
+  fieldId INTEGER NOT NULL,
   matchDate TIMESTAMP NOT NULL,
-  teamScore INTEGER NOT NULL,
-  otherTeamScore INTEGER NOT NULL
+  teamScore INTEGER,
+  otherTeamScore INTEGER
    
 );
 
 CREATE TABLE teamMatch 
 (
+  /* Maps a team to a match and a match to a team */
   teamId          INTEGER         NOT NULL,
   matchId         INTEGER         NOT NULL,
   
@@ -59,5 +60,18 @@ CREATE TABLE teamMatch
   CONSTRAINT mteamFk FOREIGN KEY (teamId) REFERENCES team (teamId),
   CONSTRAINT tmatchFk FOREIGN KEY (matchId) REFERENCES match (matchId)
 );
+
+CREATE TABLE teamPlayer
+(
+  /* Maps a player to a team, only one team per player */
+  teamId          INTEGER NOT NULL,
+  playerId         INTEGER NOT NULL,
+  isCaptain         BOOLEAN NOT NULL,
+
+  CONSTRAINT tplayerPk PRIMARY KEY (playerId),
+  CONSTRAINT pteamFk FOREIGN KEY (teamId) REFERENCES team (teamId),
+  CONSTRAINT tplayerFk FOREIGN KEY (playerId) REFERENCES player (playerId)
+);
+
 
 insert into admin (username, password) values ('maadmin', 'bananapillow')
