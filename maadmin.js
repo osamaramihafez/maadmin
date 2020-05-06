@@ -44,11 +44,12 @@ var requests = []
 var league = new maadmin.League(2);
 // console.log(league); 
 
-app.get('/maadmin/api/login/:username/:password', function(req, res){
-  var username = req.params.username;
-  var password = req.params.password;
+app.get('/maadmin/api/login', function(req, res){
+  var username = req.body.username;
+  var password = req.body.password;
   // var username = 'maadmin';
   console.log(username);
+  res.set('Access-Control-Allow-Origin', '*');
   var sql = 'SELECT password FROM admin WHERE username=$1;';
   client.query(sql, [username]).then(result => {
     console.log(result.rows);
