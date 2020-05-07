@@ -1,4 +1,18 @@
 
+const Client = require('pg').Client;
+const client = new Client({
+  user: 'maadmin',
+  password: 'VeryG00dPa$$word',
+  host: 'localhost',
+  port: 5432,
+  database: 'maadmin'
+})
+
+class Admin{
+    constructor(){
+        league = new League();
+    }
+}
 
 class Team{
     constructor(name, div, captain){
@@ -31,11 +45,7 @@ class Team{
 
 class League{
     constructor(numDivs){
-        this.divisions = [];
-        this.teams = {};
-        for (var i = 0; i<numDivs; i++){
-            this.divisions.push(new Division(`D${i+1}`));
-        }
+        //Get the league based on ID from the db
     }
     addTeam(div, team){
         this.teams[this.divisions[div].addTeam(team)] = team;

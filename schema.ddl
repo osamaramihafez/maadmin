@@ -16,7 +16,24 @@ CREATE TABLE team
 );
 
 CREATE TABLE division{
-  divID VARCHAR(20) NOT NULL PRIMARY KEY
+  divId SERIAL PRIMARY KEY,
+  season INTEGER NOT NULL,
+
+  constraint seasonFk foreign key (season) references season(seasonId)
+}
+
+CREATE TABLE season{
+  seasonId SERIAL PRIMARY KEY,
+  league VARCHAR(20),
+  
+  constraint adminFk foreign key (league) references admin(username)
+}
+
+CREATE TABLE league{
+  leagueId SERIAL PRIMARY KEY,
+  admin VARCHAR(20),
+  
+  constraint adminFk foreign key (admin) references admin(username)
 }
 
 CREATE TABLE admin
