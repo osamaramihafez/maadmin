@@ -54,6 +54,7 @@ class Team{
         this.name = name;
         this.div = div;
         this.captain = captain;
+        this.players = {}
     }
     getName(){
         return this.name;
@@ -75,6 +76,26 @@ class Team{
     setCaptain(cap){
         //Need to update the db
         this.captain = cap;
+    }
+    addPlayers(){
+        var sql = 'INSERT INTO player (firstName, lastName, phone, email) VALUES ($1, $2, $3, $4);';
+        client.query(sql, [fn, ln, p, e]).then(result => {
+            console.log(result.rows);
+            result.rows[0];
+            console.log(correctPass)
+            var login = {
+            success: true
+            }
+            if (password === correctPass){  
+            return login;
+            }
+            login.success = false
+            return login
+        }).catch(e => {
+            console.log("\n*Some sort of error*\n");
+            console.log(e);
+            return e;
+        })
     }
 }
 

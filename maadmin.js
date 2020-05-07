@@ -44,24 +44,7 @@ function addTeam(teamName, division){
 }
 
 function addPlayer(fn, ln, p, e){
-  var sql = 'INSERT INTO player (firstName, lastName, phone, email) VALUES ($1, $2, $3, $4);';
-  // client.query(sql, [fn, ln, p, e]).then(result => {
-  //   console.log(result.rows);
-  //   result.rows[0];
-  //   console.log(correctPass)
-  //   var login = {
-  //     success: true
-  //   }
-  //   if (password === correctPass){  
-  //     return login;
-  //   }
-  //   login.success = false
-  //   return login
-  // }).catch(e => {
-  //   console.log("\n*Some sort of error*\n");
-  //   console.log(e);
-  //   return e;
-  // })
+  
 }
 
 function connectTeamPlayer(teamId, playerId, isCap){
