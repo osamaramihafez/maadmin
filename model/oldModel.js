@@ -8,10 +8,6 @@ const client = new Client({
   database: 'maadmin'
 })
 
-client.connect()
-.then(() => console.log('Connected to db successfully'))
-.catch(e => console.log(e));
-
 class Admin{
     constructor(){
         this.leagues = {};
@@ -23,29 +19,6 @@ class Admin{
 
     getLeague(name){
         return this.leagues[name];
-    }
-
-    login(username, password){
-        var sql = 'SELECT password FROM admin WHERE username=$1;';
-        client.query(sql, [username]).then(result => {
-            var login = {
-            success: false
-            }
-            if (result.rows[0] == null){
-            console.log("Username or Password incorrect.");
-            return login
-            }
-            var correctPass = result.rows[0].password;
-            if (password === correctPass){  
-            login.success = true
-            return login;
-            }
-            return login;
-        }).catch(e => {
-            console.log("\nLOGIN ERROR!\n");
-            console.log(e);
-            return e;
-        })
     }
 }
 
@@ -194,7 +167,6 @@ module.exports.League = League;
 module.exports.Division = Division;
 module.exports.Match = Match;
 module.exports.Team = Team;
-module.exports.Admin = Admin;
 
 //GARBAGE CODE BELOW, STUFF I GOT RID OF (JUST FOR REFERENCE NOW)
 

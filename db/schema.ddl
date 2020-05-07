@@ -1,8 +1,8 @@
 CREATE TABLE team
 (
   teamId           SERIAL, 
-  teamName         VARCHAR(20)    NOT NULL, 
-  division          INTEGER         NOT NULL,  
+  teamName         VARCHAR(20) NOT NULL, 
+  division          INTEGER NOT NULL,  
   points            INTEGER  DEFAULT 0, 
   fixturesPlayed   INTEGER   DEFAULT 0, 
   wins              INTEGER  DEFAULT 0,
@@ -15,31 +15,40 @@ CREATE TABLE team
   CONSTRAINT teamPk PRIMARY KEY (teamId)
 );
 
-CREATE TABLE division{
-  divId SERIAL PRIMARY KEY,
-  season INTEGER NOT NULL,
-
-  constraint seasonFk foreign key (season) references season(seasonId)
-}
-
-CREATE TABLE season{
-  seasonId SERIAL PRIMARY KEY,
-  league VARCHAR(20),
-  
-  constraint adminFk foreign key (league) references admin(username)
-}
-
-CREATE TABLE league{
-  leagueId SERIAL PRIMARY KEY,
-  admin VARCHAR(20),
-  
-  constraint adminFk foreign key (admin) references admin(username)
-}
+CREATE TABLE league(
+  leagueName VARCHAR(20) PRIMARY KEY
+);
 
 CREATE TABLE admin
 (
   username VARCHAR(20) NOT NULL PRIMARY KEY,
   password VARCHAR(20) NOT NULL
+);
+
+CREATE TABLE leagueAdmin(
+  leagueName VARCHAR(20),
+  admin VARCHAR(20),
+
+  constraint alPk primary key (admin, leagueName),
+  constraint adminFk foreign key (admin) references admin(username),
+  constraint aLeagueFk foreign key (leagueName) references league(leagueName)
+);
+
+CREATE TABLE season(
+  seasonId SERIAL PRIMARY KEY,
+  league VARCHAR(20),
+  startDate TIMESTAMP,
+  endDate TIMESTAMP,
+
+  constraint leagueFk foreign key (league) references admin(username)
+);
+
+CREATE TABLE division(
+  divId SERIAL PRIMARY KEY,
+  season INTEGER NOT NULL,
+  capacity INTEGER,
+
+  constraint seasonFk foreign key (season) references season(seasonId)
 );
 
 CREATE TABLE player
@@ -91,4 +100,7 @@ CREATE TABLE teamPlayer
 );
 
 
-insert into admin (username, password) values ('maadmin', 'bananapillow')
+insert into admin (username, password) values ('maadmin', 'bananapillow');
+insert into admin (username, password) values ('123', '456');
+insert into league (leagueName) values ('Men');
+insert into leagueAdmin (leagueName, admin) values ('Men', 'maadmin'); 

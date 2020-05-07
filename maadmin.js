@@ -6,17 +6,10 @@ const express = require('express');
 const path = require('path');
 const bodyParser = require('body-parser');
 const maadmin = require('./model/model.js');
-const Client = require('pg').Client;
-const client = new Client({
-  user: 'maadmin',
-  password: 'VeryG00dPa$$word',
-  host: 'localhost',
-  port: 5432,
-  database: 'maadmin'
-})
-client.connect()
-.then(() => console.log('Connected to db successfully'))
-.catch(e => console.log(e));
+
+// client.connect()
+// .then(() => console.log('Connected to db successfully'))
+// .catch(e => console.log(e));
 
 var app = express();
 app.use(express.static(path.join(__dirname, 'build')));
@@ -26,6 +19,8 @@ app.listen(port, function () {
     console.log('maadmin app listening on port '+port);
 });
 
+let admin = new maadmin.Admin();
+
 //CRUD cheatsheet:
 // Create  POST
 // Read    GET
@@ -34,34 +29,12 @@ app.listen(port, function () {
 
 //All API requests can be seen below:
 app.get('/maadmin/api/login', function(req, res){
+  //Handle login request
   var username = req.body.username;
   var password = req.body.password;
-  // var username = 'maadmin';
-  console.log(username);
+  var result = admin.login(username, password);
   res.set('Access-Control-Allow-Origin', '*');
-  var sql = 'SELECT password FROM admin WHERE username=$1;';
-  client.query(sql, [username]).then(result => {
-    console.log(result.rows);
-    if (result.rows[0] == null){
-      res.json({success: false});
-      return
-    }
-    var correctPass = result.rows[0].password;
-    console.log(correctPass)
-    var login = {
-      success: true
-    }
-    if (password === correctPass){  
-      res.json(login);
-      return;
-    }
-    login.success = false
-    res.json(login)
-  }).catch(e => {
-    console.log("\n*Some sort of error*\n");
-    console.log(e);
-    res.json(e);
-  })
+  res.json(result);
 })
 
 function addTeam(teamName, division){
@@ -72,44 +45,44 @@ function addTeam(teamName, division){
 
 function addPlayer(fn, ln, p, e){
   var sql = 'INSERT INTO player (firstName, lastName, phone, email) VALUES ($1, $2, $3, $4);';
-  client.query(sql, [fn, ln, p, e]).then(result => {
-    console.log(result.rows);
-    result.rows[0];
-    console.log(correctPass)
-    var login = {
-      success: true
-    }
-    if (password === correctPass){  
-      return login;
-    }
-    login.success = false
-    return login
-  }).catch(e => {
-    console.log("\n*Some sort of error*\n");
-    console.log(e);
-    return e;
-  })
+  // client.query(sql, [fn, ln, p, e]).then(result => {
+  //   console.log(result.rows);
+  //   result.rows[0];
+  //   console.log(correctPass)
+  //   var login = {
+  //     success: true
+  //   }
+  //   if (password === correctPass){  
+  //     return login;
+  //   }
+  //   login.success = false
+  //   return login
+  // }).catch(e => {
+  //   console.log("\n*Some sort of error*\n");
+  //   console.log(e);
+  //   return e;
+  // })
 }
 
 function connectTeamPlayer(teamId, playerId, isCap){
   var sql = 'INSERT INTO team (teamName, division) VALUES ($1, $2);';
-  client.query(sql, [teamName, division]).then(result => {
-    console.log(result.rows);
-    var correctPass = result.rows[0].password;
-    console.log(correctPass)
-    var login = {
-      success: true
-    }
-    if (password === correctPass){  
-      return login;
-    }
-    login.success = false
-    return login
-  }).catch(e => {
-    console.log("\n*Some sort of error*\n");
-    console.log(e);
-    return e;
-  })
+  // client.query(sql, [teamName, division]).then(result => {
+  //   console.log(result.rows);
+  //   var correctPass = result.rows[0].password;
+  //   console.log(correctPass)
+  //   var login = {
+  //     success: true
+  //   }
+  //   if (password === correctPass){  
+  //     return login;
+  //   }
+  //   login.success = false
+  //   return login
+  // }).catch(e => {
+  //   console.log("\n*Some sort of error*\n");
+  //   console.log(e);
+  //   return e;
+  // })
 }
 
 
