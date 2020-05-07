@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import Button from 'react-bootstrap/Button'
-import './Registration.css'
+import './Form.css'
 import axios from 'axios'
 
 export class TeamRegistration extends Component {

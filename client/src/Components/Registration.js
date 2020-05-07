@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import TeamRegistration from './TeamRegistration';
 import PlayerRegistration from './PlayerRegistration';
-import './Registration.css'
+import './Form.css'
 
 export class Registration extends Component {
     
