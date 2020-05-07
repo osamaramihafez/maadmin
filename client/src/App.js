@@ -6,6 +6,7 @@ import './App.css'
 import TeamRegistration from './Components/TeamRegistration';
 import PlayerRegistration from './Components/PlayerRegistration';
 import Schedule from './Components/Schedule';
+import Login from './Components/Login';
 import axios from 'axios'
 
 export class App extends Component {
@@ -25,6 +26,8 @@ export class App extends Component {
           <Switch>
           <Route path='/Register/Team' component={TeamRegistration}></Route>
           <Route path='/Register/Player' component={PlayerRegistration}></Route>
+          <Route path='/Register/Login' component={Login}></Route>
+
           <Route path='/Modify/Schedules' component={() => <Schedule />}></Route>
           </Switch>
         </div>
