@@ -67,14 +67,7 @@ app.get('/maadmin/api/login', function(req, res){
 function addTeam(teamName, division){
   //Helper function for adding a team to the database
   // returns  
-  var sql = 'INSERT INTO team (teamName, division) VALUES ($1, $2);';
-  client.query(sql, [teamName, division]).then(result => {
-    return {success: true};
-  }).catch(e => {
-    console.log("\n*Some sort of error*\n");
-    console.log(e);
-    return e;
-  })
+
 }
 
 function addPlayer(fn, ln, p, e){

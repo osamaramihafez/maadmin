@@ -15,6 +15,18 @@ class Team{
     getDivision(){
         return this.div;
     }
+    setName(name){
+        //Need to update the db
+        this.name = name;
+    }
+    setDiv(div){
+        //Need to update the db
+        this.div = div;
+    }
+    setCaptain(cap){
+        //Need to update the db
+        this.captain = cap;
+    }
 }
 
 class League{
@@ -74,6 +86,17 @@ class Division{
                         the matches list is equivelant to the total number of matches.`);
         }
         this.teams[team.getName()] = team;
+    }
+
+    addTeamDB(){
+        var sql = 'INSERT INTO team (teamName, division) VALUES ($1, $2);';
+        client.query(sql, [teamName, division]).then(result => {
+          return {success: true};
+        }).catch(e => {
+          console.log("\n*Some sort of error*\n");
+          console.log(e);
+          return e;
+        })
     }
 }
 
