@@ -34,7 +34,7 @@ export class Login extends Component {
             }
         })
         .then((response) => {
-            console.log(response.data);
+            console.log(response);
         });
     }
 

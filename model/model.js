@@ -14,6 +14,7 @@ client.connect()
 
 class Admin{
     constructor(){
+        console.log("HMMMMM");
         this.leagues = {};
     }
 
@@ -26,6 +27,7 @@ class Admin{
     }
 
     login(username, password){
+        console.log('Hmm')
         var sql = 'SELECT password FROM admin WHERE username=$1;';
         client.query(sql, [username]).then(result => {
             var login = {
@@ -38,8 +40,10 @@ class Admin{
             var correctPass = result.rows[0].password;
             if (password === correctPass){  
             login.success = true
+            console.log("Password correct.");
             return login;
             }
+            console.log("Password incorrect.");
             return login;
         }).catch(e => {
             console.log("\nLOGIN ERROR!\n");
