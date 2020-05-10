@@ -27,7 +27,7 @@ export class Login extends Component {
 
     login(){
         console.log(this.state)
-        axios.get('http://muslimathleticassociation.org:3001/maadmin/api/login', {
+        axios.get('http://ec2-15-222-234-4.ca-central-1.compute.amazonaws.com:3001/maadmin/api/login', {
             data:{
                 username: this.state.username,
                 password: this.state.password
