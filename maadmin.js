@@ -28,7 +28,7 @@ let admin = new maadmin.Admin();
 // Delete  DELETE
 
 //All API requests can be seen below:
-app.get('/maadmin/api/login', function(req, res){
+app.post('/maadmin/api/login', function(req, res){
   //Handle login request
   var username = req.body.username;
   var password = req.body.password;
