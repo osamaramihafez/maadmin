@@ -32,9 +32,9 @@ app.post('/maadmin/api/login', function(req, res){
   //Handle login request
   var username = req.body.username;
   var password = req.body.password;
-  var result = admin.login(username, password);
-  res.set('Access-Control-Allow-Origin', '*');
-  res.json(result);
+  admin.login(username, password, (result) => {res.set('Access-Control-Allow-Origin', '*');
+  console.log(result)
+  res.json(result)});
 })
 
 function addTeam(teamName, division){

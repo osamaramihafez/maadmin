@@ -26,24 +26,28 @@ class Admin{
         return this.leagues[name];
     }
 
-    login(username, password){
+    login(username, password, func){
         console.log('Hmm')
         var sql = 'SELECT password FROM admin WHERE username=$1;';
+        console.log(username, password)
         client.query(sql, [username]).then(result => {
             var login = {
             success: false
             }
             if (result.rows[0] == null){
-            console.log("Username or Password incorrect.");
-            return login
+            console.log("Username does not exist.");
+            func(login);
+            return;
             }
             var correctPass = result.rows[0].password;
             if (password === correctPass){  
             login.success = true
             console.log("Password correct.");
-            return login;
+            func(login);
+            return;
             }
             console.log("Password incorrect.");
+            func(login);
             return login;
         }).catch(e => {
             console.log("\nLOGIN ERROR!\n");
