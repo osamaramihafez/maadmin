@@ -10,6 +10,7 @@ export class Login extends Component {
         this.state = {
             username: '',
             password: '',
+            errorMsg: ''
         }
     }
 
@@ -32,7 +33,16 @@ export class Login extends Component {
             password: this.state.password
         })
         .then((response) => {
-            console.log(response);
+            console.log(response.data);
+            if (!response.data.success){
+                this.setState({
+                    errorMsg: 'Username or Password Incorrect'
+                })
+            } else {
+                this.setState({
+                    errorMsg: ''
+                })
+            }
         });
     }
 
@@ -45,9 +55,8 @@ export class Login extends Component {
                 <label>Username: </label> <input type='text' name='userName' onChange={this.handleuserName.bind(this)}></input>
                 <label>Password: </label> <input type='password' name='password' onChange={this.handlepassword.bind(this)}></input>
                 <hr></hr>
-                {/* For some reason, the bootstrap isn't working,
-                but we're just looking for functionality rn so it's okay */}
                 <Button variant='success' onClick={this.login.bind(this)}>Log In</Button>
+                <p className='error'>{this.state.errorMsg}</p>
             </div>
         )
     }

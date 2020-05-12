@@ -56,6 +56,12 @@ Button{
     max-width: 500px;
 }
 
+.error{
+    color: orange;
+    padding: 10px;
+    float: right;
+}
+
 input{
     /* float: right; */
     display: block;

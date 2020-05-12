@@ -27,7 +27,6 @@ class Admin{
     }
 
     login(username, password, func){
-        console.log('Hmm')
         var sql = 'SELECT password FROM admin WHERE username=$1;';
         console.log(username, password)
         client.query(sql, [username]).then(result => {
@@ -48,7 +47,7 @@ class Admin{
             }
             console.log("Password incorrect.");
             func(login);
-            return login;
+            return;
         }).catch(e => {
             console.log("\nLOGIN ERROR!\n");
             console.log(e);
