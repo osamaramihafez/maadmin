@@ -1,39 +1,35 @@
 import React, { Component } from 'react'
-// import PlayerRegistration from './Components/PlayerRegistration';
-import {BrowserRouter as Router, Switch, Route} from 'react-router-dom'
-import Navigation from './Components/Navigation';
+import Login from './Components/Login'
+import Leagues from './Components/Leagues.js'
 import './App.css'
-import TeamRegistration from './Components/TeamRegistration';
-import PlayerRegistration from './Components/PlayerRegistration';
-import Schedule from './Components/Schedule';
-import Login from './Components/Login';
-import axios from 'axios'
 
 export class App extends Component {
-  
-  getLeague(){
-    //We need to get the data that will contain everything we need.
-    axios.get('maadmin/api/league').then({
+    
+    constructor(){
+        super();
+        this.state = {
+          loggedIn: false,
+          admin: ''
+        }
+    }
+    
+    login(user){
+        this.setState({
+            loggedIn: true,
+            admin: user
+        })
+    }
 
-    })
-  }
-  
-  render() {
-    return (
-      <Router>
-        <div className="App">
-          <Route path='/' component={Navigation}></Route>
-          <Switch>
-          <Route path='/Register/Team' component={TeamRegistration}></Route>
-          <Route path='/Register/Player' component={PlayerRegistration}></Route>
-          <Route path='/Register/Login' component={Login}></Route>
-
-          <Route path='/Modify/Schedules' component={() => <Schedule />}></Route>
-          </Switch>
-        </div>
-      </Router>
-    )
-  }
+      render() {
+        return (
+            <div className="App">
+                {!this.state.loggedIn
+                    ? <Login login={this.login.bind(this)}/>
+                    : <Leagues username={this.state.admin} />
+                }
+            </div>
+        )
+      }
 }
 
 export default App

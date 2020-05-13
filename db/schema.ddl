@@ -30,8 +30,8 @@ CREATE TABLE leagueAdmin(
   admin VARCHAR(20),
 
   constraint alPk primary key (admin, leagueName),
-  constraint adminFk foreign key (admin) references admin(username),
-  constraint aLeagueFk foreign key (leagueName) references league(leagueName)
+  constraint adminFk foreign key (admin) references admin(username) on update cascade,
+  constraint aLeagueFk foreign key (leagueName) references league(leagueName) on update cascade
 );
 
 CREATE TABLE season(
@@ -40,7 +40,7 @@ CREATE TABLE season(
   startDate TIMESTAMP,
   endDate TIMESTAMP,
 
-  constraint leagueFk foreign key (league) references admin(username)
+  constraint leagueFk foreign key (league) references admin(username) on update cascade
 );
 
 CREATE TABLE division(
@@ -48,7 +48,7 @@ CREATE TABLE division(
   season INTEGER NOT NULL,
   capacity INTEGER,
 
-  constraint seasonFk foreign key (season) references season(seasonId)
+  constraint seasonFk foreign key (season) references season(seasonId) on update cascade
 );
 
 CREATE TABLE player
@@ -83,8 +83,8 @@ CREATE TABLE teamMatch
   matchId         INTEGER         NOT NULL,
   
   CONSTRAINT tmatchPk PRIMARY KEY (teamId, matchId),
-  CONSTRAINT mteamFk FOREIGN KEY (teamId) REFERENCES team (teamId),
-  CONSTRAINT tmatchFk FOREIGN KEY (matchId) REFERENCES match (matchId)
+  CONSTRAINT mteamFk FOREIGN KEY (teamId) REFERENCES team (teamId) on update cascade,
+  CONSTRAINT tmatchFk FOREIGN KEY (matchId) REFERENCES match (matchId) on update cascade
 );
 
 CREATE TABLE teamPlayer
@@ -95,12 +95,12 @@ CREATE TABLE teamPlayer
   isCaptain         BOOLEAN NOT NULL,
 
   CONSTRAINT tplayerPk PRIMARY KEY (playerId),
-  CONSTRAINT pteamFk FOREIGN KEY (teamId) REFERENCES team (teamId),
-  CONSTRAINT tplayerFk FOREIGN KEY (playerId) REFERENCES player (playerId)
+  CONSTRAINT pteamFk FOREIGN KEY (teamId) REFERENCES team (teamId) on update cascade,
+  CONSTRAINT tplayerFk FOREIGN KEY (playerId) REFERENCES player (playerId) on update cascade
 );
 
 
 insert into admin (username, password) values ('maadmin', 'bananapillow');
 insert into admin (username, password) values ('123', '456');
-insert into league (leagueName) values ('Men');
-insert into leagueAdmin (leagueName, admin) values ('Men', 'maadmin'); 
+insert into league (leagueName) values ('Mens 18+');
+insert into leagueAdmin (leagueName, admin) values ('Mens 18+', 'maadmin'); 

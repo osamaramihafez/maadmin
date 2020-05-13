@@ -15,15 +15,37 @@ client.connect()
 class Admin{
     constructor(){
         console.log("HMMMMM");
+        this.name = ''
         this.leagues = {};
     }
 
     addLeague(name){
+        //Definitely Incomplete
         this.leagues[name] = new League(name);
     }
 
-    getLeague(name){
-        return this.leagues[name];
+    getLeagueNames(admin, func){
+        var sql = 'SELECT leagueName FROM leagueAdmin WHERE admin=$1;';
+        var name = admin.name
+        client.query(sql, [name]).then(result => {
+            if (result.rows[0] == null){
+                console.log("This admin does not currently organize a league.");
+                func({});
+                return;
+            }
+            // console.log(result.rows)
+            result.rows.forEach(sqleague => {
+                this.leagues[sqleague.leaguename] = new League(sqleague.leaguename);
+                console.log("We got a league called: " + sqleague.leaguename);
+            })
+            // We're returning a json object containing all of the league names
+            func({leagues: Object.keys(this.leagues)});
+            return;
+        }).catch(e => {
+            console.log("\nLEAGUE FETCH ERROR!\n");
+            console.log(e);
+            return e;
+        })
     }
 
     login(username, password, func){
@@ -34,16 +56,17 @@ class Admin{
             success: false
             }
             if (result.rows[0] == null){
-            console.log("Username does not exist.");
-            func(login);
-            return;
+                console.log("Username does not exist.");
+                func(login);
+                return;
             }
             var correctPass = result.rows[0].password;
             if (password === correctPass){  
-            login.success = true
-            console.log("Password correct.");
-            func(login);
-            return;
+                login.success = true
+                this.name = username;
+                console.log("Password correct.");
+                func(login);
+                return;
             }
             console.log("Password incorrect.");
             func(login);
@@ -84,22 +107,13 @@ class Team{
         //Need to update the db
         this.captain = cap;
     }
-    addPlayers(){
-        var sql = 'INSERT INTO player (firstName, lastName, phone, email) VALUES ($1, $2, $3, $4);';
+    addPlayer(fn, ln, p, e, func){
+        var sql = 'INSERT INTO player (firstName, lastName, phone, email) VALUES ($1, $2, $3, $4) RETURNING playerId;';
         client.query(sql, [fn, ln, p, e]).then(result => {
-            console.log(result.rows);
-            result.rows[0];
-            console.log(correctPass)
-            var login = {
-            success: true
-            }
-            if (password === correctPass){  
-            return login;
-            }
-            login.success = false
-            return login
+            console.log(res.rows[0])
+            func();
         }).catch(e => {
-            console.log("\n*Some sort of error*\n");
+            console.log("\nLOGIN ERROR!\n");
             console.log(e);
             return e;
         })
@@ -107,8 +121,9 @@ class Team{
 }
 
 class League{
-    constructor(Name){
+    constructor(name){
         //Get the league based on ID from the db
+        this.name = name;
     }
 }
 

@@ -33,15 +33,17 @@ export class Login extends Component {
             password: this.state.password
         })
         .then((response) => {
+            console.log("Login response body:");
             console.log(response.data);
             if (!response.data.success){
                 this.setState({
-                    errorMsg: 'Username or Password Incorrect'
+                    errorMsg: 'Username or Password is Incorrect'
                 })
             } else {
                 this.setState({
                     errorMsg: ''
                 })
+                this.props.login(this.state.username);
             }
         });
     }
