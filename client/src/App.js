@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import Login from './Components/Login'
-import Leagues from './Components/Leagues.js'
+import LeagueList from './Components/LeagueList.js'
 import './App.css'
 
 export class App extends Component {
@@ -25,7 +25,7 @@ export class App extends Component {
             <div className="App">
                 {!this.state.loggedIn
                     ? <Login login={this.login.bind(this)}/>
-                    : <Leagues username={this.state.admin} />
+                    : <LeagueList username={this.state.admin} />
                 }
             </div>
         )

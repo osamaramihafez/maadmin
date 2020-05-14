@@ -98,8 +98,6 @@ export class TeamRegistration extends Component {
                     <option>2</option>
                 </select>
                 <hr></hr>
-                {/* For some reason, the bootstrap isn't working,
-                but we're just looking for functionality rn so it's okay */}
                 <Button variant='success' onClick={this.register.bind(this)}>Register Team</Button>
             </div>
         )

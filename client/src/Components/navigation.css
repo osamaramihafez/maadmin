@@ -5,3 +5,9 @@
     border-bottom: solid rgb(0, 174, 239);
     padding: 10px 0px;
 }
+.labelTitle{
+    background: rgba(0,0,0,0.5);
+    border-radius: 50px;
+    padding: 5px;
+    text-decoration: underline;
+}
