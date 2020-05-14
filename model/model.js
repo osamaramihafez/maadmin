@@ -24,13 +24,13 @@ class Admin{
         this.leagues[name] = new League(name);
     }
 
-    getLeagueNames(admin, func){
+    getLeagueNames(admin, respond){
         var sql = 'SELECT leagueName FROM leagueAdmin WHERE admin=$1;';
         var name = admin.name
         client.query(sql, [name]).then(result => {
             if (result.rows[0] == null){
                 console.log("This admin does not currently organize a league.");
-                func({});
+                respond({});
                 return;
             }
             // console.log(result.rows)
@@ -39,7 +39,7 @@ class Admin{
                 console.log("We got a league called: " + sqleague.leaguename);
             })
             // We're returning a json object containing all of the league names
-            func({leagues: Object.keys(this.leagues)});
+            respond({leagues: Object.keys(this.leagues)});
             return;
         }).catch(e => {
             console.log("\nLEAGUE FETCH ERROR!\n");
@@ -48,7 +48,7 @@ class Admin{
         })
     }
 
-    login(username, password, func){
+    login(username, password, respond){
         var sql = 'SELECT password FROM admin WHERE username=$1;';
         console.log(username, password)
         client.query(sql, [username]).then(result => {
@@ -57,7 +57,7 @@ class Admin{
             }
             if (result.rows[0] == null){
                 console.log("Username does not exist.");
-                func(login);
+                respond(login);
                 return;
             }
             var correctPass = result.rows[0].password;
@@ -65,11 +65,11 @@ class Admin{
                 login.success = true
                 this.name = username;
                 console.log("Password correct.");
-                func(login);
+                respond(login);
                 return;
             }
             console.log("Password incorrect.");
-            func(login);
+            respond(login);
             return;
         }).catch(e => {
             console.log("\nLOGIN ERROR!\n");
@@ -79,41 +79,85 @@ class Admin{
     }
 }
 
+class Player{
+    constructor(id, first, last, age, email, phone){
+        this.playerId = id;
+        this.firstName = first;
+        this.lastName = last;
+        this.age = age;
+        this.goals = 0;
+        this.assists = 0;
+        this.yellowCards = 0;
+        this.redCards = 0;
+        this.appearances = 0;
+        this.email = email;
+        this.phone= phone;
+    }  
+
+    updatePlayer(){
+
+    }
+
+}
+
 class Team{
-    constructor(name, div, captain){
+    constructor(name, div, captain, id){
+        this.id = id;
         this.name = name;
         this.div = div;
         this.captain = captain;
         this.players = {}
     }
-    getName(){
-        return this.name;
-    }
-    getCaptain(){
-        return this.captain;
-    }
-    getDivision(){
-        return this.div;
-    }
-    setName(name){
-        //Need to update the db
-        this.name = name;
-    }
-    setDiv(div){
-        //Need to update the db
-        this.div = div;
-    }
-    setCaptain(cap){
-        //Need to update the db
-        this.captain = cap;
-    }
-    addPlayer(fn, ln, p, e, func){
-        var sql = 'INSERT INTO player (firstName, lastName, phone, email) VALUES ($1, $2, $3, $4) RETURNING playerId;';
+
+    checkPlayer(fn, ln, p, e){
+        //Later on, I want to make this check more advanced. i.e. check if only the name matches, let the user know.
+        var sql = 'Select firstName, lastName, phone, email, playerId from player where firstName=$1, lastName=$2, phone=$3, email=$4;';
+        var exists = false;
         client.query(sql, [fn, ln, p, e]).then(result => {
-            console.log(res.rows[0])
-            func();
+            //If there does exist a row that matches the select statement
+            // Then we should not add a new player.
+            if(result.rows[0] != null){
+                console.log("This player already exists with player ID: " + result.rows[0].playerID )
+            } else {
+                return true;
+            }
+            respond();
         }).catch(e => {
             console.log("\nLOGIN ERROR!\n");
+            console.log(e);
+            return e;
+        })
+    }
+
+    addPlayer(fn, ln, p, e, captain, respond){
+        var playerId;
+        if(this.checkPlayer(fn, ln, p, e)){
+            respond();
+            return;
+        }
+        //Before we add a player, we first need to see if he already exists. call checkPlayer(fn, ln, p, e)
+        var sql = 'INSERT INTO player (firstName, lastName, phone, email) VALUES ($1, $2, $3, $4) RETURNING playerId;';
+        client.query(sql, [fn, ln, p, e]).then(result => {
+            playerId = res.rows[0].playerId;
+            this.players[playerId] = new Player(playerId, fn, ln, e,  p);
+            this.playerToTeam();
+            respond();
+        }).catch(e => {
+            console.log("\n ERROR! Player could not be created!\n");
+            console.log(e);
+            return e;
+        })
+        
+    }
+
+    playerToTeam(){
+        //Connects a player to a team
+        sql = 'INSERT INTO teamplayer (playerId, teamId, isCaptain) VALUES ($1, $2, $3);';
+        client.query(sql, [playerId, this.id, captain]).then(result => {
+            console.log(res.rows[0])
+            respond();
+        }).catch(e => {
+            console.log("\n ERROR! Player cannot be added to team\n");
             console.log(e);
             return e;
         })
@@ -124,6 +168,30 @@ class League{
     constructor(name){
         //Get the league based on ID from the db
         this.name = name;
+        this.teams = {};
+    }
+
+    getTeamNames(league){
+        const sql = 'SELECT teamname from team where league=$1'
+        client.query(sql, [league]).then(result => {
+            if (result.rows[0] == null){
+                console.log("This league does not currently have any teams.");
+                respond({});
+                return;
+            }
+            result.rows.forEach(teamName => {
+                this.teams[teamName] = new Team(teamName);
+                console.log("We got a league called: " + teamName);
+            })
+            // We're returning a json object containing all of the league names
+            respond({teams: Object.keys(this.teams)});
+            return;
+        }).catch(e => {
+            console.log("\nLEAGUE FETCH ERROR!\n");
+            console.log(e);
+            return e;
+        })
+        
     }
 }
 

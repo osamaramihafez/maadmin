@@ -1,20 +1,3 @@
-CREATE TABLE team
-(
-  teamId           SERIAL, 
-  teamName         VARCHAR(20) NOT NULL, 
-  division          INTEGER NOT NULL,  
-  points            INTEGER  DEFAULT 0, 
-  fixturesPlayed   INTEGER   DEFAULT 0, 
-  wins              INTEGER  DEFAULT 0,
-  losses             INTEGER  DEFAULT 0,
-  draws             INTEGER  DEFAULT 0,
-  goalsFor          INTEGER  DEFAULT 0,
-  goalsAgainst     INTEGER   DEFAULT 0,
-  goalDifferential INTEGER   DEFAULT 0,
-
-  CONSTRAINT teamPk PRIMARY KEY (teamId)
-);
-
 CREATE TABLE league(
   leagueName VARCHAR(20) PRIMARY KEY
 );
@@ -49,6 +32,28 @@ CREATE TABLE division(
   capacity INTEGER,
 
   constraint seasonFk foreign key (season) references season(seasonId) on update cascade
+);
+
+CREATE TABLE team
+(
+  teamId           SERIAL, 
+  teamName         VARCHAR(20) NOT NULL, 
+  division          INTEGER NOT NULL,  
+  league          VARCHAR(20) NOT NULL,  
+  points            INTEGER  DEFAULT 0, 
+  fixturesPlayed   INTEGER   DEFAULT 0, 
+  wins              INTEGER  DEFAULT 0,
+  losses             INTEGER  DEFAULT 0,
+  draws             INTEGER  DEFAULT 0,
+  goalsFor          INTEGER  DEFAULT 0,
+  goalsAgainst     INTEGER   DEFAULT 0,
+  goalDifferential INTEGER   DEFAULT 0,
+
+  
+  CONSTRAINT teamPk PRIMARY KEY (teamId),
+  constraint tLeagueFk foreign key (league) references league(leagueName) on update cascade,
+  constraint tDivisionFk foreign key (division) references division(divId) on update cascade
+
 );
 
 CREATE TABLE player

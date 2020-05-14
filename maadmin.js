@@ -19,7 +19,9 @@ app.listen(port, function () {
     console.log('maadmin app listening on port '+port);
 });
 
-let admin = new maadmin.Admin();
+let choices = {
+  admin: new maadmin.Admin()
+};
 
 //CRUD cheatsheet:
 // Create  POST
@@ -32,17 +34,25 @@ app.post('/maadmin/api/login', (req, res) => {
   //Handle login request
   var username = req.body.username;
   var password = req.body.password;
-  admin.login(username, password, result => {
+  choices.admin.login(username, password, result => {
     res.set('Access-Control-Allow-Origin', '*');
     res.json(result);
   });
 })
 
 app.get('/maadmin/api/leagueNames', (req, res) => {
-  admin.getLeagueNames(admin, leagueNames => {
+  choices.admin.getLeagueNames(choices.admin, leagueNames => {
     res.set('Access-Control-Allow-Origin', '*');
     res.status(200);
     res.json(leagueNames);
+  });
+})
+
+app.get('/maadmin/api/teamList/:league', (req, res) => {
+  choices.admin.leagues[req.params.league].getTeamNames(choices.admin, teamNames => {
+    res.set('Access-Control-Allow-Origin', '*');
+    res.status(200);
+    res.json(teamNames);
   });
 })
 
