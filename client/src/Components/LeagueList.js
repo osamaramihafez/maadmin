@@ -33,20 +33,26 @@ export class LeagueList extends Component {
     }
     
     render() {
-        if(this.state.leagueChosen === ''){
+        if(this.state.leagueChosen === '' && this.state.leagues != null){
             const leagues = this.state.leagues.map((league) =>
-                    <div key={league}><br></br> <Button variant="primary" onClick={() => this.chooseLeague(league)}>{league}</Button></div> 
+                    <div key={league} className='leagues'><Button variant="primary" onClick={() => this.chooseLeague(league)}>{league}</Button></div> 
             );
             return (
                 <div className='Navigation'>
-                    Choose from one of the following leagues: <br></br>
                     {leagues}
                 </div>
             ) 
-        } else {
+        } else if(this.state.leagueChosen != '') {
             return (
                 <League name={this.state.leagueChosen} />
             ) 
+        } else {
+            return (
+                <div className='Navigation'>
+                    <p>NOTICE: This user does not manage a league</p>
+                    <Button>Click here to create a new league</Button>
+                </div>
+            )
         }
 
     }

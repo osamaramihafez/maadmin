@@ -3,6 +3,16 @@
   color: white;
 }
 
+.Title{
+  color: rgb(140, 196, 60, 0.6);
+  border-radius: 3px;
+  /* font-style: italic; */
+  margin: 20px 20px;
+  border-bottom: solid rgb(26, 94, 79);
+  font-family: Lato;
+  /* float: left; */
+}
+
 .App-logo {
   height: 40vmin;
   pointer-events: none;
@@ -12,6 +22,15 @@
   .App-logo {
     animation: App-logo-spin infinite 20s linear;
   }
+}
+
+.logout{
+  float: right;
+}
+
+.leagues{
+  padding-right: 10px;
+  padding-left: 10px;
 }
 
 .App-header {

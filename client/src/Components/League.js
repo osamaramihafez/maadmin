@@ -10,25 +10,32 @@ export class League extends Component {
         var name = this.props.name
         this.state = {
             leagueName: name,
-            view: 'Team'
+            view: 'Teams'
         }
     }
 
+    switchView(v){
+        this.setState({
+            view: v
+        })
+    }
+
     render() {
-        if (this.state.view === 'Team'){
+        var show;
+        if (this.state.view === 'Teams'){
+            show = <TeamList league={this.state.leagueName} />
+        }
             return (
                 <div>
                     <div className='Navigation'>
-                        <Button>Registration</Button>
-                        <Button>Teams</Button>
-                        <Button>Players</Button>
-                        <Button>Divisions</Button>
-                        <Button>Schedule</Button>
+                        <Button onClick={() => this.switchView('Registration')}>Registration</Button>
+                        <Button onClick={() => this.switchView('Teams')}>Teams</Button>
+                        <Button onClick={() => this.switchView('Players')}>Players</Button>
+                        <Button onClick={() => this.switchView('Divisions')}>Divisions</Button>
                     </div>
-                    <TeamList league={this.state.leagueName} />
+                    {show}
                 </div>
             )
-        }
     }
 }
 

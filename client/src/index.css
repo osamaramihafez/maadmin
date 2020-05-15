@@ -13,7 +13,8 @@ body{
 
 html{
   min-height: 100%;
-  background-image: linear-gradient(rgb(27, 72, 88) 10%,rgba(70, 94, 37, 0.9));
+  /* background-image: linear-gradient(rgb(27, 72, 88) 10%,rgba(70, 94, 37, 0.9 )); */
+  background: radial-gradient(rgb(25, 58, 70) 10%,rgba(38, 49, 21, 0.9));
 }
 
 code {

@@ -1,13 +1,25 @@
 .Navigation{
     background: rgb(140, 196, 60, 0.6);
     border-radius: 3px;
-    margin: 10px 100px;
+    margin: 0px 100px;
     border-bottom: solid rgb(0, 174, 239);
-    padding: 10px 0px;
+    padding: 10px 10px;
+    display: flex;
 }
 .labelTitle{
     background: rgba(0,0,0,0.5);
     border-radius: 50px;
     padding: 5px;
     text-decoration: underline;
+}
+p{
+    color: rgb(124, 12, 12);
+    padding: 10px;
+}
+.leagues{
+    /* display: block;  */
+    flex-grow: 1;
+}
+Button{
+    flex-grow: 1;
 }

@@ -108,4 +108,8 @@ CREATE TABLE teamPlayer
 insert into admin (username, password) values ('maadmin', 'bananapillow');
 insert into admin (username, password) values ('123', '456');
 insert into league (leagueName) values ('Mens 18+');
-insert into leagueAdmin (leagueName, admin) values ('Mens 18+', 'maadmin'); 
+insert into league (leagueName) values ('Mens 35+');
+insert into league (leagueName) values ('Youth');
+insert into leagueAdmin (leagueName, admin) values ('Mens 18+', 'maadmin');
+insert into leagueAdmin (leagueName, admin) values ('Mens 35+', 'maadmin');
+insert into leagueAdmin (leagueName, admin) values ('Youth', 'maadmin');
