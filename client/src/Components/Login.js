@@ -53,10 +53,9 @@ export class Login extends Component {
             <div className="login">
                 <h2>System Login</h2>
                 <hr></hr>
-                <h5>Sign In</h5>
                 <label>Username: </label> <input type='text' name='userName' onChange={this.handleuserName.bind(this)}></input>
                 <label>Password: </label> <input type='password' name='password' onChange={this.handlepassword.bind(this)}></input>
-                <hr></hr>
+                <br></br>
                 <Button variant='success' onClick={this.login.bind(this)}>Log In</Button>
                 <p className='error'>{this.state.errorMsg}</p>
             </div>
