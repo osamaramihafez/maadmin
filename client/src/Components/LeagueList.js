@@ -35,6 +35,20 @@ export class LeagueList extends Component {
         })
     }
 
+    leagueCreated(){
+        this.setState({
+            create: false
+        })
+        axios.get('/maadmin/api/leagueNames').then((res) => {
+            console.log(res.data)
+            if (res.data.leagues){
+                this.setState({
+                    leagues: res.data.leagues
+                })
+            }
+        })
+    }
+
     componentDidMount(){
         axios.get('/maadmin/api/leagueNames').then((res) => {
             console.log(res.data)
@@ -52,7 +66,7 @@ export class LeagueList extends Component {
         if (this.state.create === true){
             //We want to check if the create button was clicked, if so then we display the create a league form
             return(
-                <LeagueForm />
+                <LeagueForm back={this.leagueCreated.bind(this)} />
             )
         } else if(this.state.leagueChosen === '' && this.state.leagues != null){
             //Map every league to a button

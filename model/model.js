@@ -14,30 +14,35 @@ client.connect()
 
 class Admin{
     constructor(){
-        console.log("HMMMMM");
+        //Each administrator should have a name (id) and a set of leagues.
+        //Note: we don't need to store the password here, the database keeps the password safe.
         this.name = ''
         this.leagues = {};
     }
 
-    addLeague(name){
-        //Definitely Incomplete
-        this.leagues[name] = new League(name);
+    logout(){
+        this.name = ''
+        this.leagues = {}
     }
 
     getLeagueNames(admin, respond){
         var sql = 'SELECT leagueName FROM leagueAdmin WHERE admin=$1;';
-        var name = admin.name
+        var name = this.name
         client.query(sql, [name]).then(result => {
+
+            //If the rows are empty, then that means that this admin does not currently organize a league. 
             if (result.rows[0] == null){
                 console.log("This admin does not currently organize a league.");
                 respond({});
                 return;
             }
-            // console.log(result.rows)
+            
+            //We want to create a league object for each league that we fetched so that we can access them later.
             result.rows.forEach(sqleague => {
                 this.leagues[sqleague.leaguename] = new League(sqleague.leaguename);
                 console.log("We got a league called: " + sqleague.leaguename);
             })
+
             // We're returning a json object containing all of the league names
             respond({leagues: Object.keys(this.leagues)});
             return;
@@ -45,6 +50,62 @@ class Admin{
             console.log("\nLEAGUE FETCH ERROR!\n");
             console.log(e);
             return e;
+        })
+    }
+
+    connectLeague(leagueName){
+        //This function connects a league to an administrator.
+        var sql = 'INSERT INTO leagueAdmin (leagueName, admin) VALUES ($1, $2) RETURNING *;';
+        var admin = this.name
+        console.log(admin)
+        console.log("Connecting: " + leagueName);
+        client.query(sql, [leagueName, admin]).then(result => {
+            if (result.rows[0] == null){
+                console.log("Did not connect "+ leagueName + " to" + admin);
+                return;
+            }
+            console.log("Connected "+ leagueName + " to" + admin);
+            return;
+        }).catch(e => {
+            console.log("\nLEAGUE CONNECTION ERROR!\n");
+            console.log(e);
+            return e;
+        })
+    }
+
+    addLeague(leagueName, numDivs, respond){
+
+        //First we will add a league to the database, then connect it to an admin using connectLeague
+        var sql = 'INSERT INTO league (leaguename) VALUES ($1) RETURNING *;';
+        console.log(leagueName);
+        client.query(sql, [leagueName]).then(result => {
+
+            //If we have null returned, what does that mean?
+            if (result.rows[0] == null){
+                console.log("Did not add " + leagueName + " to leagues");
+                respond({success: false});
+                return;
+            }
+
+            // Now that we've added the league, we first want to add some divisions to the league
+            var league = new League(leagueName);
+            league.addDivisions(parseInt(numDivs), () => {
+                this.leagues[leagueName] = league;
+
+                //We also want to connect the league to the admin
+                this.connectLeague(leagueName);
+                respond({success: true});
+                return;
+            })
+
+        }).catch(e => {
+            console.log("\nLEAGUE CREATION ERROR!\nTHIS LEAGUE LIKELY ALREADY EXISTS.\n");
+            respond({
+                succes: false,
+                error: "ALREADY EXISTS"
+            })
+            console.log(e);
+            return;
         })
     }
 
@@ -152,7 +213,7 @@ class Team{
 
     playerToTeam(){
         //Connects a player to a team
-        sql = 'INSERT INTO teamplayer (playerId, teamId, isCaptain) VALUES ($1, $2, $3);';
+        var sql = 'INSERT INTO teamplayer (playerId, teamId, isCaptain) VALUES ($1, $2, $3);';
         client.query(sql, [playerId, this.id, captain]).then(result => {
             console.log(res.rows[0])
             respond();
@@ -169,14 +230,32 @@ class League{
         //Get the league based on ID from the db
         this.name = name;
         this.teams = {};
+        this.divisions = {};
     }
 
-    getTeamNames(league){
+    async addDivisions(numDivs, connect){
+        for(var div = 1; div<numDivs+1 ; div++){
+            this.divisions[div] = new Division(div);
+            // Current div capacity will always be 16, we can change this later.
+            var sql = 'INSERT INTO division (divId, league, capacity) VALUES ($1, $2, 16);';
+            await client.query(sql, [div, this.name]).then(res => {
+                // console.log(res.rows[0])
+                console.log("Division Created")
+            }).catch(e => {
+                console.log("\n ERROR! Division error\n");
+                console.log(e);
+                return e;
+            })
+        }
+        connect();
+    }
+
+    getTeamNames(league, respond){
         const sql = 'SELECT teamname from team where league=$1'
         client.query(sql, [league]).then(result => {
             if (result.rows[0] == null){
                 console.log("This league does not currently have any teams.");
-                respond({});
+                respond({teams:[]});
                 return;
             }
             result.rows.forEach(teamName => {

@@ -24,10 +24,13 @@ export class LeagueForm extends Component {
     }
 
     createLeague(){
-        axios.post('/maadmin/api/teamList/createLeague', this.state)
+        axios.post('/maadmin/api/createLeague', this.state)
         .then( (res) => {
             console.log('Created a new league')
             console.log(res);
+            if (res.data.success){
+                this.props.back()
+            }
         })
     }
 
