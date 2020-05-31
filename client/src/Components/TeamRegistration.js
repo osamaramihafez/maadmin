@@ -5,8 +5,8 @@ import axios from 'axios'
 
 export class TeamRegistration extends Component {
 
-    constructor(){
-        super();
+    constructor(props){
+        super(props);
         this.state = {
             firstName: '',
             lastName: '',
@@ -85,16 +85,14 @@ export class TeamRegistration extends Component {
             <div className="TeamRegistration">
                 <h2>Add a new team</h2>
                 <hr></hr>
-                <h5>Captain info</h5>
-                <label>First Name: </label> <input type='text' name='captainFirstName' onChange={this.handleFirstName.bind(this)}></input>
-                <label>Last Name: </label> <input type='text' name='captainLastName' onChange={this.handleLastName.bind(this)}></input>
-                <label>Phone #: </label> <input type='tel' name='captainPhone' onChange={this.handlePhone.bind(this)}></input>
-                <label>Email: </label> <input type='email' name='captainEmail' onChange={this.handleEmail.bind(this)}></input>
-                <label>Age: </label> <input type='range' name='captainAge' onChange={this.handleAge.bind(this)}></input>
+                <label>First Name </label> <input type='text' name='captainFirstName' onChange={this.handleFirstName.bind(this)}></input>
+                <label>Last Name </label> <input type='text' name='captainLastName' onChange={this.handleLastName.bind(this)}></input>
+                <label>Phone # </label> <input type='tel' name='captainPhone' onChange={this.handlePhone.bind(this)}></input>
+                <label>Email </label> <input type='email' name='captainEmail' onChange={this.handleEmail.bind(this)}></input>
+                <label>Age </label> <input type='range' name='captainAge' onChange={this.handleAge.bind(this)}></input>
                 <hr></hr>
-                <h5>Team info</h5>
-                <label>Team Name: </label> <input type='text' name='teamName' onChange={this.handleTeamName.bind(this)}></input>
-                <label>Division: </label>
+                <label>Team Name </label> <input type='text' name='teamName' onChange={this.handleTeamName.bind(this)}></input>
+                <label>Division </label>
                 <select name="teamDivision" onChange={this.handleDivision.bind(this)}>
                     <option>1</option>
                     <option>2</option>

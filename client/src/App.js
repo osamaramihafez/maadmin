@@ -34,15 +34,26 @@ export class App extends Component {
 
       render() {
         return (
+            <div>
+            {!this.state.loggedIn
+                    ?<div>
+                        <div className='Title'><h1>Maadmin</h1><h6>A league managment tool. Still under development.</h6></div>
+                    </div>
+                    :<div className='Title'>
+                        <h1>Maadmin</h1>
+                        <Button className='logout' variant='dark' onClick={this.logout.bind(this)}>Logout</Button>
+                        <h6>A league managment tool. Still under development.</h6>
+                    </div>
+            }
             <div className="App">
-                <h1 className='Title'>Maadmin</h1>
                 {!this.state.loggedIn
                     ? <Login login={this.login.bind(this)}/>
                     : <div className='leagues'>
-                        <Button className='logout' variant='outline-primary' onClick={this.logout.bind(this)}>Logout</Button>
+                        {/* <Button className='logout' variant='outline-primary' onClick={this.logout.bind(this)}>Logout</Button> */}
                         <LeagueList username={this.state.admin} />
                       </div>
                 }
+            </div>
             </div>
         )
       }

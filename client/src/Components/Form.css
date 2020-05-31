@@ -1,8 +1,15 @@
 /* MAA colors rgb(0, 174, 239); rgb(140, 196, 60); */
 
 input{
-    margin: 5px; 
+    background: rgb(162, 202, 193);
+    margin: 0px 10px;
+    padding: 5px 10px;
 }
+
+label{
+    margin-top: 10px;
+}
+
 select :enabled{
     border: none;
 }
@@ -12,15 +19,20 @@ h5{
 }
 
 .login{
-    background-image: linear-gradient(rgb(27, 72, 88) 10%,rgba(70, 94, 37, 0.9));
-    border: solid 6px;
-    color: white;
+    /* background: linear-gradient(rgb(31, 146, 65, 0.8) 80%,rgba(27, 88, 52, 0.7)); */
+    /* background-image: linear-gradient(rgba(79, 98, 105, 0.8) 10%,rgba(30, 94, 146, 0.8)); */
+    /* border: solid 6px rgb(162, 202, 193); */
+    /* background: rgb(31, 146, 65); */
+    color: rgb(162, 202, 193);
     border-radius: 50px;
     margin: 30px 30px 30px 30px; /* Top right bottom left */
     padding: 5%;
     text-align: left;
-    max-width: 500px;
-    width: 100%;
+    width: 50%;
+    max-width: 50%;
+    position: absolute;
+    left: 24%;
+    
 }
 
 select{
@@ -35,21 +47,29 @@ Button{
 }
 .TeamRegistration{
     /* background: rgb(140, 196, 60, 0.9); */
-    background-image: linear-gradient(rgb(27, 72, 88) 10%,rgba(70, 94, 37, 0.9));
-    border: solid 6px;
-    color: white;
+    /* background-image: linear-gradient(rgb(27, 72, 88) 10%,rgba(70, 94, 37, 0.9)); */
+    border: solid 6px rgb(162, 202, 193);
+    color: rgb(162, 202, 193);
     border-radius: 50px;
     margin: 30px 30px 30px 30px; /* Top right bottom left */
-    padding: 5%;
+    padding: 2%;
     text-align: left;
     max-width: 500px;
     position: sticky;
+    display: inline-block;
 }
+
+label {
+    /* width: 100px; */
+    /* text-align: right; */
+    font-weight: bold;
+  }
 
 .PlayerRegistration{
     background-image: linear-gradient(rgb(27, 72, 88) 10%,rgba(70, 94, 37, 0.9));
-    border: solid 6px;
-    color: white;
+    /* background-image: linear-gradient(rgb(27, 72, 88) 10%,rgba(70, 94, 37, 0.9)); */
+    border: solid 6px rgb(162, 202, 193);
+    color: rgb(162, 202, 193);
     border-radius: 50px;
     margin: 30px 30px 30px 30px; /* Top right bottom left */
     padding: 5%;
@@ -72,10 +92,7 @@ input{
     border-radius: 5px;
 }
 hr{
-    background: rgb(0, 174, 239);
+    background: rgba(27, 88, 52, 0.7);
     padding: 2px;
     border-radius: 50px;
-}
-label{
-    font-weight: bold;
 }

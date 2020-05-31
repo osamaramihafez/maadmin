@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import axios from 'axios'
 import TeamRegistration from './TeamRegistration'
 import Button from 'react-bootstrap/Button'
+import './teamList.css'
 
 export class Teams extends Component {
     
@@ -27,10 +28,10 @@ export class Teams extends Component {
                         <div key={team}><Button variant="primary" onClick={() => this.chooseLeague(team)}>{team}</Button></div> 
                 );
             
-            var teamList = <div className='Navigation'> Choose from to modify one of the following teams: {teams}</div>
+            var teamList = <div className='teamList'> Choose from to modify one of the following teams: {teams}</div>
         }
         return (
-            <div>
+            <div className='teamContainer'>
                 <TeamRegistration league={this.props.league} />
                 {teamList}
             </div>

@@ -1,0 +1,8 @@
+.teamList{
+    background: linear-gradient(rgba(71, 196, 60, 0.8) 90%, rgba(0,0,0, 0.9));
+    border-radius: 3px;
+    margin: 0px 100px;
+    border-bottom: solid rgb(0, 174, 239);
+    padding: 10px 10px;
+    display: inline-block;
+}

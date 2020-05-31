@@ -28,7 +28,6 @@ export class League extends Component {
             return (
                 <div>
                     <div className='Navigation'>
-                        <Button onClick={() => this.switchView('Registration')}>Registration</Button>
                         <Button onClick={() => this.switchView('Teams')}>Teams</Button>
                         <Button onClick={() => this.switchView('Players')}>Players</Button>
                         <Button onClick={() => this.switchView('Divisions')}>Divisions</Button>
