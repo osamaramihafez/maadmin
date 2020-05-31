@@ -25,6 +25,10 @@ class Admin{
         this.leagues = {}
     }
 
+    addTeam(first, last, phone, email, age, teamName, division, league){
+        this.leagues[league].addTeam(first, last, phone, email, age, teamName, division, league);
+    }
+
     getLeagueNames(admin, respond){
         var sql = 'SELECT leagueName FROM leagueAdmin WHERE admin=$1;';
         var name = this.name
@@ -45,7 +49,7 @@ class Admin{
 
             // We're returning a json object containing all of the league names
             respond({leagues: Object.keys(this.leagues)});
-            return;
+            return this.leagues;
         }).catch(e => {
             console.log("\nLEAGUE FETCH ERROR!\n");
             console.log(e);
@@ -141,10 +145,11 @@ class Admin{
 }
 
 class Player{
-    constructor(id, first, last, age, email, phone){
+    constructor(id, first, last, age, email, phone, cap){
         this.playerId = id;
         this.firstName = first;
         this.lastName = last;
+        this.isCaptain = cap;
         this.age = age;
         this.goals = 0;
         this.assists = 0;
@@ -190,19 +195,17 @@ class Team{
         })
     }
 
-    addPlayer(fn, ln, p, e, captain, respond){
+    addPlayer(fn, ln, p, e, a, captain){
         var playerId;
         if(this.checkPlayer(fn, ln, p, e)){
-            respond();
             return;
         }
         //Before we add a player, we first need to see if he already exists. call checkPlayer(fn, ln, p, e)
-        var sql = 'INSERT INTO player (firstName, lastName, phone, email) VALUES ($1, $2, $3, $4) RETURNING playerId;';
-        client.query(sql, [fn, ln, p, e]).then(result => {
+        var sql = 'INSERT INTO player (firstName, lastName, phone, email, age) VALUES ($1, $2, $3, $4, $5) RETURNING playerId;';
+        client.query(sql, [fn, ln, p, e, a]).then(res => {
             playerId = res.rows[0].playerId;
-            this.players[playerId] = new Player(playerId, fn, ln, e,  p);
-            this.playerToTeam();
-            respond();
+            this.players[playerId] = new Player(playerId, fn, ln, e,  p, captain);
+            this.playerToTeam(this.players[playerId]);
         }).catch(e => {
             console.log("\n ERROR! Player could not be created!\n");
             console.log(e);
@@ -211,12 +214,12 @@ class Team{
         
     }
 
-    playerToTeam(){
+    playerToTeam(player){
         //Connects a player to a team
         var sql = 'INSERT INTO teamplayer (playerId, teamId, isCaptain) VALUES ($1, $2, $3);';
-        client.query(sql, [playerId, this.id, captain]).then(result => {
+        client.query(sql, [player.playerId, this.id, captain]).then(res => {
             console.log(res.rows[0])
-            respond();
+            return;
         }).catch(e => {
             console.log("\n ERROR! Player cannot be added to team\n");
             console.log(e);
@@ -231,6 +234,10 @@ class League{
         this.name = name;
         this.teams = {};
         this.divisions = {};
+    }
+
+    addTeam(first, last, phone, email, age, teamName, division, league){
+        this.divisions[division].addTeam(first, last, phone, email, age, teamName, division, league);
     }
 
     async addDivisions(numDivs, connect){
@@ -296,37 +303,35 @@ class Division{
         return this.matches;
     }
 
-    setTotalMatches(){
-        this.totalMatches = (this.numTeams-1)*this.numTeams / 2;
-    }
+    // addCaptain(first, last, phone, age, email){
+    //     var sql = 'INSERT INTO player (firstname, lastname, age, phonenumber, email) VALUES ($1, $2, $3) RETURNING *;';
+    //     client.query(sql, [first, last, age, phone, email]).then(result => {
+    //         var id = result.rows[0].playerId
+    //         var team = new Player(id, first, last, age, email, phone);
+    //         this.teams[teamname] = team;
+    //         return {success: true};
+    //     }).catch(e => {
+    //       console.log("\n*Some sort of error*\n");
+    //       console.log(e);
+    //       return e;
+    //     })
+    // }
 
-    addTeam(team){
-        var match;
-        this.numTeams++;
-        this.setTotalMatches();
-        this.teamMatches[team] = [];
-        if (this.totalMatches > 0){
-            for(var w = 0; w<this.numTeams - 1; w++){
-                match = new Match(team, this.teams[w]);
-                this.matches.push(match);
-                this.teamMatches[team].push(match);
-            }
-            console.log(`It is ${this.matches.length == this.totalMatches} that the length of
-                        the matches list is equivelant to the total number of matches.`);
-        }
-        this.teams[team.getName()] = team;
-    }
-
-    addTeamDB(){
-        var sql = 'INSERT INTO team (teamName, division) VALUES ($1, $2);';
-        client.query(sql, [teamName, division]).then(result => {
-          return {success: true};
+    addTeam(first, last, phone, email, age, teamname, division, league){
+        var sql = 'INSERT INTO team (teamname, division, league) VALUES ($1, $2, $3) RETURNING *;';
+        client.query(sql, [teamname, division, league]).then(result => {
+            var id = result.rows[0].teamId
+            var team = new Team(teamname, id, division, captain);
+            team.addPlayer(first, last, phone, email, age, true);
+            this.teams[teamname] = team;
+            return {success: true};
         }).catch(e => {
           console.log("\n*Some sort of error*\n");
           console.log(e);
           return e;
         })
     }
+
 }
 
 class Match{
@@ -384,6 +389,7 @@ module.exports.League = League;
 module.exports.Division = Division;
 module.exports.Match = Match;
 module.exports.Team = Team;
+module.exports.Player = Player;
 module.exports.Admin = Admin;
 
 //GARBAGE CODE BELOW, STUFF I GOT RID OF (JUST FOR REFERENCE NOW)

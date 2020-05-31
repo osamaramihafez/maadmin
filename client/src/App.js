@@ -3,6 +3,7 @@ import Login from './Components/Login'
 import LeagueList from './Components/LeagueList.js'
 import './App.css'
 import Button from 'react-bootstrap/Button';
+import axios from 'axios'
 
 export class App extends Component {
     
@@ -22,9 +23,12 @@ export class App extends Component {
     }
 
     logout(){
-        this.setState({
-            loggedIn: false,
-            admin: ''
+        //We also need to logout by deleting the current admin inside of maadmin.js
+        axios.post('/maadmin/api/logout').then((res) => {
+            this.setState({
+                loggedIn: false,
+                admin: ''
+            })
         })
     }
 

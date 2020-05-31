@@ -13,7 +13,9 @@ export class TeamRegistration extends Component {
             phone: '',
             email: '',
             teamName: '',
-            division: 1
+            division: 1,
+            age: 18,
+            league: this.props.league
         }
     }
 
@@ -53,26 +55,25 @@ export class TeamRegistration extends Component {
         });
     }
 
+    handleAge(e){
+        this.setState({
+            age: e.target.value
+        });
+    }
+
     register(){
         this.registerPlayer();
         this.registerTeam();
     }
 
-    registerPlayer(){
-        axios.post('/maadmin/api/addPlayer', this.state)
-        .then( (res) => {
-            console.log('Adding Player')
-            console.log(res);
-        })
-    }
-
     registerTeam(){
-        var body = {
-            teamName: this.state.teamName,
-            division: this.state.division,
-            captain: this.state.firstName + ' ' + this.lastName
-        }
-        axios.post('/maadmin/api/addTeam', body)
+        // var body = {
+        //     teamName: this.state.teamName,
+        //     division: this.state.division,
+        //     captain: this.state.firstName + ' ' + this.lastName,
+        //     league: this.props.league
+        // }
+        axios.post('/maadmin/api/addTeam', this.state)
         .then( (res) => {
             console.log('Adding Team')
             console.log(res);
@@ -89,6 +90,7 @@ export class TeamRegistration extends Component {
                 <label>Last Name: </label> <input type='text' name='captainLastName' onChange={this.handleLastName.bind(this)}></input>
                 <label>Phone #: </label> <input type='tel' name='captainPhone' onChange={this.handlePhone.bind(this)}></input>
                 <label>Email: </label> <input type='email' name='captainEmail' onChange={this.handleEmail.bind(this)}></input>
+                <label>Age: </label> <input type='range' name='captainAge' onChange={this.handleAge.bind(this)}></input>
                 <hr></hr>
                 <h5>Team info</h5>
                 <label>Team Name: </label> <input type='text' name='teamName' onChange={this.handleTeamName.bind(this)}></input>

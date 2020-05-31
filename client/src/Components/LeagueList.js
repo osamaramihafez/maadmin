@@ -50,6 +50,7 @@ export class LeagueList extends Component {
     }
 
     componentDidMount(){
+        console.log("attempting to recieve leagues");
         axios.get('/maadmin/api/leagueNames').then((res) => {
             console.log(res.data)
             if (res.data.leagues){

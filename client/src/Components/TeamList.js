@@ -22,15 +22,16 @@ export class Teams extends Component {
     }
 
     render() {
-        const teams = this.state.teams.map((team) =>
-                    <div key={team}><Button variant="primary" onClick={() => this.chooseLeague(team)}>{team}</Button></div> 
-            );
-        
-        var teamList = <div className='Navigation'> Choose from one of the following leagues: {teams}</div>
-
+        if (this.state.teams !== null){
+            const teams = this.state.teams.map((team) =>
+                        <div key={team}><Button variant="primary" onClick={() => this.chooseLeague(team)}>{team}</Button></div> 
+                );
+            
+            var teamList = <div className='Navigation'> Choose from to modify one of the following teams: {teams}</div>
+        }
         return (
             <div>
-                <TeamRegistration />
+                <TeamRegistration league={this.props.league} />
                 {teamList}
             </div>
         )

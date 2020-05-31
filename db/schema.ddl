@@ -39,7 +39,7 @@ CREATE TABLE division(
 CREATE TABLE team
 (
   teamId           SERIAL, 
-  teamName         VARCHAR(20) NOT NULL, 
+  teamname         VARCHAR(20) NOT NULL, 
   division          INTEGER NOT NULL,  
   league          VARCHAR(50) NOT NULL,  
   points            INTEGER  DEFAULT 0, 
@@ -53,14 +53,13 @@ CREATE TABLE team
 
   
   CONSTRAINT teamPk PRIMARY KEY (teamId),
-  constraint tLeagueFk foreign key (league) references league(leaguename) on update cascade on delete cascade,
+  UNIQUE (teamname, division, league),  
   constraint tDivisionFk foreign key (division, league) references division(divId, league) on update cascade on delete cascade
-
 );
 
 CREATE TABLE player
 (
-  playerId INTEGER PRIMARY KEY, 
+  playerId SERIAL, 
   firstName VARCHAR(30) NOT NULL, 
   lastName VARCHAR(30) NOT NULL, 
   age INTEGER NOT NULL,
@@ -75,6 +74,7 @@ CREATE TABLE player
 
 CREATE TABLE match 
 (
+  /* Should probably restructure this somehow */
   matchId INTEGER NOT NULL PRIMARY KEY,
   fieldId INTEGER NOT NULL,
   matchDate TIMESTAMP NOT NULL,
