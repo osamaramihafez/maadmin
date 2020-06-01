@@ -28,7 +28,7 @@ export class Teams extends Component {
                         <div key={team}><Button variant="primary" onClick={() => this.chooseLeague(team)}>{team}</Button></div> 
                 );
             
-            var teamList = <div className='teamList'> Choose from to modify one of the following teams: {teams}</div>
+            var teamList = <div className='teamList'> <h1>Modify a team </h1> {teams}</div>
         }
         return (
             <div className='teamContainer'>

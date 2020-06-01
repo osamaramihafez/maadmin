@@ -1,8 +1,25 @@
-.teamList{
+/* .teamList{
     background: linear-gradient(rgba(71, 196, 60, 0.8) 90%, rgba(0,0,0, 0.9));
     border-radius: 3px;
     margin: 0px 100px;
     border-bottom: solid rgb(0, 174, 239);
     padding: 10px 10px;
     display: inline-block;
+} */
+
+.teamList{
+    border: solid 6px rgb(162, 202, 193);
+    color: rgb(162, 202, 193);
+    border-radius: 50px;
+    margin: 30px 30px 30px 30px; /* Top right bottom left */
+    padding: 2%;
+    text-align: left;
+    max-width: 500px;
+    position: sticky;
+    display: inline-block;
+}
+
+.teamContainer{
+    padding: -50px;
+    margin-left: -25%;
 }

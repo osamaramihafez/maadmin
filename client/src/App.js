@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import Login from './Components/Login'
+import CreateAccount from './Components/CreateAccount'
 import LeagueList from './Components/LeagueList.js'
 import './App.css'
 import Button from 'react-bootstrap/Button';
@@ -11,7 +12,8 @@ export class App extends Component {
         super();
         this.state = {
           loggedIn: false,
-          admin: ''
+          admin: '',
+          create: false
         }
     }
     
@@ -19,6 +21,18 @@ export class App extends Component {
         this.setState({
             loggedIn: true,
             admin: user
+        })
+    }
+
+    create(){
+        this.setState({
+            create: true
+        })
+    }
+
+    created(){
+        this.setState({
+            create: false
         })
     }
 
@@ -36,9 +50,17 @@ export class App extends Component {
         return (
             <div>
             {!this.state.loggedIn
-                    ?<div>
-                        <div className='Title'><h1>Maadmin</h1><h6>A league managment tool. Still under development.</h6></div>
-                    </div>
+                    ? (!this.state.create
+                        ? <div className='Title'>
+                            <h1>Maadmin</h1>
+                            <Button className='logout' variant='dark' onClick={this.create.bind(this)}>Create an Account</Button>
+                            <h6>A league managment tool. Still under development.</h6>
+                        </div>
+                        : <div className='Title'>
+                            <h1>Maadmin</h1>
+                            <h6>A league managment tool. Still under development.</h6>
+                        </div>
+                    )
                     :<div className='Title'>
                         <h1>Maadmin</h1>
                         <Button className='logout' variant='dark' onClick={this.logout.bind(this)}>Logout</Button>
@@ -47,7 +69,10 @@ export class App extends Component {
             }
             <div className="App">
                 {!this.state.loggedIn
-                    ? <Login login={this.login.bind(this)}/>
+                    ? (!this.state.create
+                        ?<Login login={this.login.bind(this)}/>
+                        :<CreateAccount created={this.created.bind(this)} />
+                        )
                     : <div className='leagues'>
                         {/* <Button className='logout' variant='outline-primary' onClick={this.logout.bind(this)}>Logout</Button> */}
                         <LeagueList username={this.state.admin} />

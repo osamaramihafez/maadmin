@@ -41,6 +41,16 @@ app.post('/maadmin/api/login', (req, res) => {
   });
 })
 
+app.post('/maadmin/api/createAccount', (req, res) => {
+  //Handle login request
+  var username = req.body.username;
+  var password = req.body.password;
+  maadmin.createAccount(username, password, result => {
+    res.set('Access-Control-Allow-Origin', '*');
+    res.json(result);
+  });
+})
+
 app.post('/maadmin/api/logout', (req, res) => {
   choices.admin.logout();
   res.set('Access-Control-Allow-Origin', '*');

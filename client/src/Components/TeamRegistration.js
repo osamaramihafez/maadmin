@@ -62,17 +62,6 @@ export class TeamRegistration extends Component {
     }
 
     register(){
-        this.registerPlayer();
-        this.registerTeam();
-    }
-
-    registerTeam(){
-        // var body = {
-        //     teamName: this.state.teamName,
-        //     division: this.state.division,
-        //     captain: this.state.firstName + ' ' + this.lastName,
-        //     league: this.props.league
-        // }
         axios.post('/maadmin/api/addTeam', this.state)
         .then( (res) => {
             console.log('Adding Team')
@@ -89,13 +78,16 @@ export class TeamRegistration extends Component {
                 <label>Last Name </label> <input type='text' name='captainLastName' onChange={this.handleLastName.bind(this)}></input>
                 <label>Phone # </label> <input type='tel' name='captainPhone' onChange={this.handlePhone.bind(this)}></input>
                 <label>Email </label> <input type='email' name='captainEmail' onChange={this.handleEmail.bind(this)}></input>
-                <label>Age </label> <input type='range' name='captainAge' onChange={this.handleAge.bind(this)}></input>
+                <label>Age: {this.state.age}</label> <input className='slider' type='range' min='18' max='35' value={this.state.age} name='captainAge' onChange={this.handleAge.bind(this)}></input>
                 <hr></hr>
                 <label>Team Name </label> <input type='text' name='teamName' onChange={this.handleTeamName.bind(this)}></input>
                 <label>Division </label>
                 <select name="teamDivision" onChange={this.handleDivision.bind(this)}>
                     <option>1</option>
                     <option>2</option>
+                    <option>3</option>
+                    <option>4</option>
+                    <option>5</option>
                 </select>
                 <hr></hr>
                 <Button variant='success' onClick={this.register.bind(this)}>Register Team</Button>
