@@ -14,7 +14,7 @@ h1{
 }
 
 h2, h3, h4, h5, h6{
-  font-weight: lighter;
+  /* font-weight: lighter; */
   font-family: Lato;
 }
 
@@ -22,7 +22,7 @@ h2, h3, h4, h5, h6{
   color: rgba(37, 45, 121, 0.7);
   /* font-style: italic; */
   padding: 10px 10px;
-  background: rgb(31, 146, 65);
+  background: rgb(31, 146, 65, 0.7);
   border-bottom: solid rgb(26, 94, 79);
   font-weight: lighter;
   font-family: Lato;

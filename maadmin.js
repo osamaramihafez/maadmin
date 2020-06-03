@@ -59,7 +59,7 @@ app.post('/maadmin/api/logout', (req, res) => {
 })
 
 app.get('/maadmin/api/leagueNames', (req, res) => {
-  choices.leagues = choices.admin.getLeagueNames(choices.admin, leagueNames => {
+  choices.leagues = choices.admin.getLeagueNames(leagueNames => {
     res.set('Access-Control-Allow-Origin', '*');
     res.status(200);
     res.json(leagueNames)
@@ -67,7 +67,7 @@ app.get('/maadmin/api/leagueNames', (req, res) => {
 })
 
 app.get('/maadmin/api/teamList/:league', (req, res) => {
-  choices.admin.leagues[req.params.league].getTeamNames(choices.admin, teams => {
+  choices.admin.leagues[req.params.league].getTeamNames(teams => {
     res.set('Access-Control-Allow-Origin', '*');
     res.status(200);
     res.json(teams);

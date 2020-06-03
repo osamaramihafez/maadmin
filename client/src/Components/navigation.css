@@ -1,9 +1,10 @@
 .Navigation{
     /* background: rgb(140, 196, 60, 0.6); */
-    background: linear-gradient(rgba(71, 196, 60, 0.8) 90%, rgba(0,0,0, 0.9));
+    background: linear-gradient(rgb(255, 255, 255, 0.2), rgba(71, 196, 60, 0.8) 90%, rgba(0,0,0, 0.5));
     border-radius: 3px;
     padding: 10px 10px;
     margin: 10px 100px;
+    border-radius: 10px;
     display: flex;
 }
 .labelTitle{

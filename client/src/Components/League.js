@@ -30,7 +30,7 @@ export class League extends Component {
                     <div className='Navigation'>
                         <Button onClick={() => this.switchView('Teams')}>Teams</Button>
                         <Button onClick={() => this.switchView('Players')}>Players</Button>
-                        <Button onClick={() => this.switchView('Divisions')}>Divisions</Button>
+                        <Button onClick={() => this.switchView('Schedules')}>Schedules</Button>
                     </div>
                     {show}
                 </div>

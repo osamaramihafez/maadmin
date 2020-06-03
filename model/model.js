@@ -12,20 +12,25 @@ client.connect()
 .then(() => console.log('Connected to db successfully'))
 .catch(e => console.log(e));
 
+function isFunction(functionToCheck) {
+    return functionToCheck && {}.toString.call(functionToCheck) === '[object Function]';
+   }
+
 module.exports.createAccount = function createAdmin(username, password, respond){
     var sql = "INSERT INTO admin (username, password) VALUES ($1, $2) RETURNING *";
     client.query(sql, [username, password]).then(result => {
         //If the rows are empty, then that means that this admin does not currently organize a league. 
         if (result.rows[0] == null){
             console.log("This admin was not created.");
-            respond({success: false});
+            if (isFunction(respond)) respond({success: false});
             return;
         }
-        respond({success: true});
+        if (isFunction(respond)) respond({success: true});
         return;
     }).catch(e => {
         console.log("\nADMIN CREATION ERROR!\n");
         console.log(e);
+        if (isFunction(respond)) respond({success: false});
         return e;
     })
 }
@@ -34,7 +39,7 @@ class Admin{
     constructor(){
         //Each administrator should have a name (id) and a set of leagues.
         //Note: we don't need to store the password here, the database keeps the password safe.
-        this.name = ''
+        this.name = '';
         this.leagues = {};
     }
 
@@ -43,30 +48,34 @@ class Admin{
         this.leagues = {}
     }
 
-    addTeam(first, last, phone, email, age, teamName, division, league){
+    async addTeam(first, last, phone, email, age, teamName, division, league){
+        await this.getLeagueNames(() => {
+            console.log("League Fetch Complete.")
+        });
         this.leagues[league].addTeam(first, last, phone, email, age, teamName, division, league);
     }
 
-    getLeagueNames(admin, respond){
+    getLeagueNames(respond){
         var sql = 'SELECT leagueName FROM leagueAdmin WHERE admin=$1;';
         var name = this.name
         client.query(sql, [name]).then(result => {
 
             //If the rows are empty, then that means that this admin does not currently organize a league. 
             if (result.rows[0] == null){
-                console.log("This admin does not currently organize a league.");
-                respond({});
+                console.log("The admin \""+ name +"\" does not currently organize a league.");
+                if (isFunction(respond)) respond({});
                 return;
             }
-            this.leagues = {};
             //We want to create a league object for each league that we fetched so that we can access them later.
             result.rows.forEach(sqleague => {
-                this.leagues[sqleague.leaguename] = new League(sqleague.leaguename);
-                console.log("We got a league called: " + sqleague.leaguename);
+                if (!this.leagues[sqleague.leaguename]){
+                    this.leagues[sqleague.leaguename] = new League(sqleague.leaguename);
+                    console.log("We got a league called: " + sqleague.leaguename);
+                }
             })
 
             // We're returning a json object containing all of the league names
-            respond({leagues: Object.keys(this.leagues)});
+            if (isFunction(respond)) respond({leagues: Object.keys(this.leagues)});
             return this.leagues;
         }).catch(e => {
             console.log("\nLEAGUE FETCH ERROR!\n");
@@ -94,17 +103,17 @@ class Admin{
         })
     }
 
-    addLeague(leagueName, numDivs, respond){
+    async addLeague(leagueName, numDivs, respond){
 
         //First we will add a league to the database, then connect it to an admin using connectLeague
         var sql = 'INSERT INTO league (leaguename) VALUES ($1) RETURNING *;';
         console.log(leagueName);
-        client.query(sql, [leagueName]).then(result => {
+        await client.query(sql, [leagueName]).then(result => {
 
             //If we have null returned, what does that mean?
             if (result.rows[0] == null){
                 console.log("Did not add " + leagueName + " to leagues");
-                respond({success: false});
+                if (isFunction(respond)) respond({success: false});
                 return;
             }
 
@@ -115,13 +124,12 @@ class Admin{
 
                 //We also want to connect the league to the admin
                 this.connectLeague(leagueName);
-                respond({success: true});
+                if (isFunction(respond)) respond({success: true});
                 return;
             })
-
         }).catch(e => {
             console.log("\nLEAGUE CREATION ERROR!\nTHIS LEAGUE LIKELY ALREADY EXISTS.\n");
-            respond({
+            if (isFunction(respond)) respond({
                 succes: false,
                 error: "ALREADY EXISTS"
             })
@@ -132,14 +140,13 @@ class Admin{
 
     login(username, password, respond){
         var sql = 'SELECT password FROM admin WHERE username=$1;';
-        console.log(username, password)
         client.query(sql, [username]).then(result => {
             var login = {
             success: false
             }
             if (result.rows[0] == null){
                 console.log("Username does not exist.");
-                respond(login);
+                if (isFunction(respond)) respond(login);
                 return;
             }
             var correctPass = result.rows[0].password;
@@ -147,98 +154,14 @@ class Admin{
                 login.success = true
                 this.name = username;
                 console.log("Password correct.");
-                respond(login);
+                if (isFunction(respond)) respond(login);
                 return;
             }
             console.log("Password incorrect.");
-            respond(login);
+            if (isFunction(respond)) respond(login);
             return;
         }).catch(e => {
             console.log("\nLOGIN ERROR!\n");
-            console.log(e);
-            return e;
-        })
-    }
-}
-
-class Player{
-    constructor(id, first, last, age, email, phone, cap){
-        this.playerId = id;
-        this.firstName = first;
-        this.lastName = last;
-        this.isCaptain = cap;
-        this.age = age;
-        this.goals = 0;
-        this.assists = 0;
-        this.yellowCards = 0;
-        this.redCards = 0;
-        this.appearances = 0;
-        this.email = email;
-        this.phone= phone;
-    }  
-
-    updatePlayer(){
-
-    }
-
-}
-
-class Team{
-    constructor(name, div, captain, id){
-        this.id = id;
-        this.name = name;
-        this.div = div;
-        this.captain = captain;
-        this.players = {}
-    }
-
-    checkPlayer(fn, ln, p, e){
-        //Later on, I want to make this check more advanced. i.e. check if only the name matches, let the user know.
-        var sql = 'Select firstName, lastName, phone, email, playerId from player where firstName=$1, lastName=$2, phone=$3, email=$4;';
-        var exists = false;
-        client.query(sql, [fn, ln, p, e]).then(result => {
-            //If there does exist a row that matches the select statement
-            // Then we should not add a new player.
-            if(result.rows[0] != null){
-                console.log("This player already exists with player ID: " + result.rows[0].playerID )
-            } else {
-                return true;
-            }
-            respond();
-        }).catch(e => {
-            console.log("\nLOGIN ERROR!\n");
-            console.log(e);
-            return e;
-        })
-    }
-
-    addPlayer(fn, ln, p, e, a, captain){
-        var playerId;
-        if(this.checkPlayer(fn, ln, p, e)){
-            return;
-        }
-        //Before we add a player, we first need to see if he already exists. call checkPlayer(fn, ln, p, e)
-        var sql = 'INSERT INTO player (firstName, lastName, phone, email, age) VALUES ($1, $2, $3, $4, $5) RETURNING playerId;';
-        client.query(sql, [fn, ln, p, e, a]).then(res => {
-            playerId = res.rows[0].playerId;
-            this.players[playerId] = new Player(playerId, fn, ln, e,  p, captain);
-            this.playerToTeam(this.players[playerId]);
-        }).catch(e => {
-            console.log("\n ERROR! Player could not be created!\n");
-            console.log(e);
-            return e;
-        })
-        
-    }
-
-    playerToTeam(player){
-        //Connects a player to a team
-        var sql = 'INSERT INTO teamplayer (playerId, teamId, isCaptain) VALUES ($1, $2, $3);';
-        client.query(sql, [player.playerId, this.id, captain]).then(res => {
-            console.log(res.rows[0])
-            return;
-        }).catch(e => {
-            console.log("\n ERROR! Player cannot be added to team\n");
             console.log(e);
             return e;
         })
@@ -253,21 +176,20 @@ class League{
         this.divisions = {};
     }
 
-    addTeam(first, last, phone, email, age, teamName, division, league){
-        console.log(division);
+    async addTeam(first, last, phone, email, age, teamName, division, league){
+        await this.getDivisions();
         this.divisions[division].addTeam(first, last, phone, email, age, teamName, division, league);
     }
 
     async addDivisions(numDivs, connect){
         for(var div = 1; div<numDivs+1 ; div++){
-            this.divisions[toString(div)] = new Division(div);
             // Current div capacity will always be 16, we can change this later.
             var sql = 'INSERT INTO division (divId, league, capacity) VALUES ($1, $2, 16);';
             await client.query(sql, [div, this.name]).then(res => {
-                // console.log(res.rows[0])
-                console.log("Division " + div + " Created")
+                console.log("Division " + div + " Created");
+                this.divisions[toString(div)] = new Division(div);
             }).catch(e => {
-                console.log("\n ERROR! Division error\n");
+                console.log("\nDIVISION CREATION ERROR!\n");
                 console.log(e);
                 return e;
             })
@@ -275,23 +197,45 @@ class League{
         connect();
     }
 
-    getTeamNames(league, respond){
-        const sql = 'SELECT teamname from team where league=$1'
-        client.query(sql, [league]).then(result => {
+    async getDivisions(){
+        // Current div capacity will always be 16, we can change this later.
+        var sql = 'SELECT divId from division where league=$1;';
+        await client.query(sql, [this.name]).then(res => {
+            var divBack = this.divisions;
+            res.rows.forEach((division) => {
+                if (!this.divisions[division.divid]){
+                    this.divisions[division.divid] = new Division(division.divid);
+                    console.log("We got a division called: " + division.divid);
+                }
+            })
+        }).catch(e => {
+            console.log("\nDIVISION FETCH ERROR!\n");
+            console.log(e);
+            return e;
+        })
+    }
+
+    getTeamNames(respond){
+        const sql = 'SELECT * from team where league=$1'
+        client.query(sql, [this.name]).then(result => {
             if (result.rows[0] == null){
                 console.log("This league does not currently have any teams.");
-                respond({teams:[]});
                 return;
             }
-            result.rows.forEach(teamName => {
-                this.teams[teamName] = new Team(teamName);
-                console.log("We got a league called: " + teamName);
+            result.rows.forEach(team => {
+                if (!this.teams[team.name]){
+                    this.teams[team.name] = new Team(team.name);
+                    console.log("We got a Team called: " + team.name);
+                } else {
+                    this.teams[team.name] = divBack[team.name];
+                    console.log("We got a Team called: " + team.name);
+                }
             })
             // We're returning a json object containing all of the league names
-            respond({teams: Object.keys(this.teams)});
+            if (isFunction(respond)) respond({teams: Object.keys(this.teams)});
             return;
         }).catch(e => {
-            console.log("\nLEAGUE FETCH ERROR!\n");
+            console.log("\nTeam  FETCH ERROR!\n");
             console.log(e);
             return e;
         })
@@ -305,49 +249,98 @@ class Division{
         this.totalMatches = 0;
         this.id = id;
         this.teams = {};
-        this.matches = [];
-        this.teamMatches = {}
     }
 
-    getTeams(){
-        return this.teams;
-    }
-
-    getTeamMatches(team){
-        return this.teamMatches[team];
-    }
-
-    getMatches(){
-        return this.matches;
-    }
-
-    // addCaptain(first, last, phone, age, email){
-    //     var sql = 'INSERT INTO player (firstname, lastname, age, phonenumber, email) VALUES ($1, $2, $3) RETURNING *;';
-    //     client.query(sql, [first, last, age, phone, email]).then(result => {
-    //         var id = result.rows[0].playerId
-    //         var team = new Player(id, first, last, age, email, phone);
-    //         this.teams[teamname] = team;
-    //         return {success: true};
-    //     }).catch(e => {
-    //       console.log("\n*Some sort of error*\n");
-    //       console.log(e);
-    //       return e;
-    //     })
-    // }
-
-    addTeam(first, last, phone, email, age, teamname, division, league){
-        var sql = 'INSERT INTO team (teamname, division, league) VALUES ($1, $2, $3) RETURNING *;';
-        client.query(sql, [teamname, division, league]).then(result => {
-            var id = result.rows[0].teamId
-            var team = new Team(teamname, id, division, captain);
+    addTeam(first, last, phone, email, age, name, division, league){
+        var sql = 'INSERT INTO team (name, division, league) VALUES ($1, $2, $3) RETURNING *;';
+        client.query(sql, [name, division, league]).then(result => {
+            var id = result.rows[0].teamid
+            var team = new Team(id, name);
             team.addPlayer(first, last, phone, email, age, true);
-            this.teams[teamname] = team;
+            this.teams[name] = team;
             return {success: true};
         }).catch(e => {
           console.log("\n*Some sort of error*\n");
           console.log(e);
           return e;
         })
+    }
+
+    getTeamNames(respond){
+        const sql = 'SELECT * from team where division=$1'
+        client.query(sql, [this.id]).then(result => {
+            if (result.rows[0] == null){
+                console.log("This league does not currently have any teams.");
+                respond({teams:[]});
+                return;
+            }
+            result.rows.forEach(team => {
+                if (!this.teams[team.name]){
+                    this.teams[team.name] = new Team(team.id, team.name);
+                    console.log("We got a Team called: " + team.name);
+                }
+            })
+            // We're returning a json object containing all of the league names
+            if (isFunction(respond)) respond({teams: Object.keys(this.teams)});
+            return;
+        }).catch(e => {
+            console.log("\nLEAGUE FETCH ERROR!\n");
+            console.log(e);
+            return e;
+        })
+        
+    }
+
+}
+
+class Team{
+    constructor(id, name){
+        this.id = id;
+        this.name = name;
+        this.players = {}
+    }
+
+    addPlayer(fn, ln, p, e, a){
+        var playerid;
+        var sql = 'INSERT INTO player (firstName, lastName, phone, email, age) VALUES ($1, $2, $3, $4, $5) RETURNING playerId;';
+        client.query(sql, [fn, ln, p, e, a]).then(res => {
+            playerid = res.rows[0].playerid;
+            this.players[playerid] = new Player(fn, ln, e,  p);
+            this.playerToTeam(playerid, true);
+        }).catch(e => {
+            console.log("\n ERROR! Player could not be created!\n");
+            console.log(e);
+            return e;
+        })
+        
+    }
+
+    playerToTeam(player, captain){
+        //Connects a player to a team
+        var sql = 'INSERT INTO teamplayer (playerid, teamId, isCaptain) VALUES ($1, $2, $3);';
+        client.query(sql, [player, this.id, captain]).then(res => {
+            return;
+        }).catch(e => {
+            console.log("\n ERROR! Player cannot be added to team\n");
+            console.log(e);
+            return e;
+        })
+    }
+}
+
+class Player{
+    constructor(first, last, age, email, phone){
+        this.playerid;
+        this.firstName = first;
+        this.lastName = last;
+        this.age = age;
+        this.email = email;
+        this.phone= phone;
+        this.goals = 0;
+        this.assists = 0;
+        this.yellowCards = 0;
+        this.redCards = 0;
+        this.appearances = 0;
     }
 
 }
@@ -364,11 +357,6 @@ class Match{
         // this.time;
         // this.date;
         // this.location;
-    }
-    playMatch(score1, score2){
-        this.played = true;
-        this.homeScore = score1;
-        this.awayScore = score2;
     }
 }
 

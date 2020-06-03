@@ -58,6 +58,7 @@ export class App extends Component {
                         </div>
                         : <div className='Title'>
                             <h1>Maadmin</h1>
+                            <Button className='logout' variant='dark' onClick={this.created.bind(this)}>Back to login</Button>
                             <h6>A league managment tool. Still under development.</h6>
                         </div>
                     )

@@ -39,7 +39,7 @@ CREATE TABLE division(
 CREATE TABLE team
 (
   teamId           SERIAL, 
-  teamname         VARCHAR(20) NOT NULL, 
+  name         VARCHAR(20) NOT NULL, 
   division          INTEGER NOT NULL,  
   league          VARCHAR(50) NOT NULL,  
   points            INTEGER  DEFAULT 0, 
@@ -53,23 +53,26 @@ CREATE TABLE team
 
   
   CONSTRAINT teamPk PRIMARY KEY (teamId),
-  UNIQUE (teamname, division, league),  
+  UNIQUE (name, division, league),  
   constraint tDivisionFk foreign key (division, league) references division(divId, league) on update cascade on delete cascade
 );
 
 CREATE TABLE player
 (
-  playerId SERIAL, 
+  playerId SERIAL PRIMARY KEY, 
   firstName VARCHAR(30) NOT NULL, 
-  lastName VARCHAR(30) NOT NULL, 
+  lastName VARCHAR(30) NOT NULL,
+  phone VARCHAR(50) NOT NULL,
   age INTEGER NOT NULL,
   goals INTEGER DEFAULT 0,
   assists INTEGER DEFAULT 0,
   yellowCards INTEGER DEFAULT 0,
   redCards INTEGER DEFAULT 0,
   appearances INTEGER DEFAULT 0,
-  email VARCHAR(50),
-  phoneNumber VARCHAR(50) NOT NULL
+  email VARCHAR(50)
+
+  /* UNIQUE (firstname, lastname, phone) */
+
 );
 
 CREATE TABLE match 
@@ -108,10 +111,3 @@ CREATE TABLE teamPlayer
 
 
 insert into admin (username, password) values ('maadmin', 'bananapillow');
-insert into admin (username, password) values ('123', '456');
-insert into league (leaguename) values ('Mens 18+');
-insert into league (leaguename) values ('Mens 35+');
-insert into league (leaguename) values ('Youth');
-insert into leagueAdmin (leaguename, admin) values ('Mens 18+', 'maadmin');
-insert into leagueAdmin (leaguename, admin) values ('Mens 35+', 'maadmin');
-insert into leagueAdmin (leaguename, admin) values ('Youth', 'maadmin');

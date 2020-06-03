@@ -52,7 +52,6 @@ export class CreateAccount extends Component {
             <div className="login">
                 <h2>Admin creation</h2>
                 <hr></hr>
-                <br></br>
                 <label>Username </label> <input type='text' name='userName' onChange={this.handleuserName.bind(this)}></input>
                 <label>Password </label> <input type='password' name='password' onChange={this.handlepassword.bind(this)}></input>
                 <br></br>
