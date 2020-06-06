@@ -1,11 +1,5 @@
 /* MAA colors rgb(0, 174, 239); rgb(140, 196, 60); */
 
-input{
-    background: rgb(162, 202, 193);
-    margin: 0px 10px;
-    padding: 5px 10px;
-}
-
 label{
     margin-top: 10px;
 }
@@ -24,7 +18,6 @@ h5{
     /* border: solid 6px rgb(162, 202, 193); */
     /* background: rgb(31, 146, 65); */
     color: rgb(162, 202, 193);
-    border-radius: 50px;
     margin: 30px 30px 30px 30px; /* Top right bottom left */
     padding: 5%;
     text-align: left;
@@ -50,13 +43,14 @@ Button{
     /* background-image: linear-gradient(rgb(27, 72, 88) 10%,rgba(70, 94, 37, 0.9)); */
     border: solid 6px rgb(162, 202, 193);
     color: rgb(162, 202, 193);
-    border-radius: 50px;
-    margin: 30px 30px 30px 30px; /* Top right bottom left */
+    border-radius: 5px;
+    margin: 30px 30px 30px 30px; /*Top right bottom left*/
     padding: 2%;
     text-align: left;
     max-width: 500px;
     position: sticky;
-    display: inline-block;
+    /* display: inline-block; */
+    flex-grow: 1;
 }
 
 label {
@@ -67,9 +61,10 @@ label {
 
 .slider {
     -webkit-appearance: none;
-    width: 100%;
+    max-width: 90%;
     height: 25px;
-    padding: 0px;
+    margin: 0px 10px;
+    padding: 5px 5px;
     background: rgb(162, 202, 193);
     outline: none;
     -webkit-transition: .2s;
@@ -80,7 +75,7 @@ label {
     -webkit-appearance: none;
     appearance: none;
     width: 25px;
-    height: 25px;
+    height: 20px;
     background: #4CAF50;
     cursor: pointer;
 }
@@ -89,19 +84,30 @@ label {
     background: #4CAF50;
     cursor: pointer;
     width: 25px;
-    height: 25px;
+    height: 20px;
 }
 
 .PlayerRegistration{
     background-image: linear-gradient(rgb(27, 72, 88) 10%,rgba(70, 94, 37, 0.9));
-    /* background-image: linear-gradient(rgb(27, 72, 88) 10%,rgba(70, 94, 37, 0.9)); */
     border: solid 6px rgb(162, 202, 193);
     color: rgb(162, 202, 193);
-    border-radius: 50px;
+    border-radius: 5px;
     margin: 30px 30px 30px 30px; /* Top right bottom left */
     padding: 5%;
     text-align: left;
     max-width: 500px;
+}
+
+.Registration{
+    border: solid 6px rgb(162, 202, 193);
+    color: rgb(162, 202, 193);
+    border-radius: 5px;
+    margin: 30px 30px 30px 30px; /*Top right bottom left*/
+    padding: 2%;
+    text-align: left;
+    max-width: 500px;
+    position: sticky;
+    flex-grow: 1;
 }
 
 .error{
@@ -111,12 +117,13 @@ label {
 }
 
 input{
-    /* float: right; */
     display: block;
     max-width: 90%;
-    /* background: rgb(0, 174, 239, 0.5); */
-    /* color: rgba(250,250,250); */
     border-radius: 5px;
+    background: rgb(162, 202, 193);
+    margin: 0px 10px;
+    padding: 5px 10px;
+    width: 90%;
 }
 hr{
     background: rgba(27, 88, 52, 0.7);

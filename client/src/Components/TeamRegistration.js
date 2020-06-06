@@ -66,12 +66,13 @@ export class TeamRegistration extends Component {
         .then( (res) => {
             console.log('Adding Team')
             console.log(res);
+            this.props.callBack();
         })
     }
 
     render() {
         return (
-            <div className="TeamRegistration">
+            <div className="Registration">
                 <h2>Add a new team</h2>
                 <hr></hr>
                 <label>First Name </label> <input type='text' name='captainFirstName' onChange={this.handleFirstName.bind(this)}></input>

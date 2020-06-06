@@ -8,3 +8,4 @@ DROP TABLE  match CASCADE;
 DROP TABLE  teamMatch CASCADE;
 DROP TABLE  teamPlayer CASCADE;
 DROP TABLE  leagueAdmin CASCADE;
+DROP TABLE  playerstats CASCADE;

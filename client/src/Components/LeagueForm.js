@@ -36,11 +36,12 @@ export class LeagueForm extends Component {
 
     render() {
         return (
-            <div className="PlayerRegistration">
+            <center>
+            <div className="Registration">
                 <h2>Add a new League</h2>
                 <hr></hr>
                 <label>League name: </label> <input type='text' name='captainFirstName' onChange={this.handleLeagueName.bind(this)}></input>
-                <select name="teamDivision" onChange={this.handleDivisions.bind(this)}>
+                <label>Number of Divisions: </label><select name="teamDivision" onChange={this.handleDivisions.bind(this)}>
                     <option>1</option>
                     <option>2</option>
                     <option>3</option>
@@ -50,6 +51,7 @@ export class LeagueForm extends Component {
                 <hr></hr>
                 <Button variant='success' onClick={this.createLeague.bind(this)}>Create League</Button>
             </div>
+            </center>
         )
     }
 }

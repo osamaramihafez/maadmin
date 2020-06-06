@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import Button from 'react-bootstrap/Button'
 import TeamList from './TeamList' 
+import PlayerList from './PlayerList' 
 import './navigation.css'
 
 export class League extends Component {
@@ -24,6 +25,8 @@ export class League extends Component {
         var show;
         if (this.state.view === 'Teams'){
             show = <TeamList league={this.state.leagueName} />
+        } else if (this.state.view ==='Players'){
+            show = <PlayerList league={this.state.leagueName} />
         }
             return (
                 <div>

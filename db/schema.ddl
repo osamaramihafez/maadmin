@@ -64,15 +64,24 @@ CREATE TABLE player
   lastName VARCHAR(30) NOT NULL,
   phone VARCHAR(50) NOT NULL,
   age INTEGER NOT NULL,
+  email VARCHAR(50) NOT NULL,
+
+  UNIQUE (firstname, lastname, phone)
+
+);
+
+CREATE TABLE playerStats(
+  player INTEGER PRIMARY KEY,
+  league VARCHAR(50) NOT NULL,
+  division INTEGER NOT NULL,
   goals INTEGER DEFAULT 0,
   assists INTEGER DEFAULT 0,
   yellowCards INTEGER DEFAULT 0,
   redCards INTEGER DEFAULT 0,
   appearances INTEGER DEFAULT 0,
-  email VARCHAR(50)
 
-  /* UNIQUE (firstname, lastname, phone) */
-
+  constraint pIplayerFk foreign key (player) references player(playerId) on update cascade on delete cascade,
+  constraint pIDivisionFk foreign key (division, league) references division(divId, league) on update cascade on delete cascade
 );
 
 CREATE TABLE match 
@@ -99,7 +108,7 @@ CREATE TABLE teamMatch
 
 CREATE TABLE teamPlayer
 (
-  /* Maps a player to a team, only one team per player */
+  /* Maps a player to a team, only one team per player in a league */
   teamId          INTEGER NOT NULL,
   playerId         INTEGER NOT NULL,
   isCaptain         BOOLEAN NOT NULL,

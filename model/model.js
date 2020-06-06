@@ -173,6 +173,7 @@ class League{
         //Get the league based on ID from the db
         this.name = name;
         this.teams = {};
+        this.players = {};
         this.divisions = {};
     }
 
@@ -215,6 +216,33 @@ class League{
         })
     }
 
+    getPlayerNames(respond){
+        const sql = 'SELECT * from player where league=$1'
+        client.query(sql, [this.name]).then(result => {
+            if (result.rows[0] == null){
+                console.log("This league does not currently have any players.");
+                return;
+            }
+            var back = this.players
+            result.rows.forEach(player => {
+                if (!this.players[player.name]){
+                    this.players[player.name] = new player(player.name);
+                    console.log("We got a player called: " + player.name);
+                } else {
+                    this.players[player.name] = back[player.name];
+                    console.log("We got a player called: " + player.name);
+                }
+            })
+            // We're returning a json object containing all of the league names
+            if (isFunction(respond)) respond({players: Object.keys(this.players)});
+            return;
+        }).catch(e => {
+            console.log("\nplayer  FETCH ERROR!\n");
+            console.log(e);
+            return e;
+        })
+    }
+
     getTeamNames(respond){
         const sql = 'SELECT * from team where league=$1'
         client.query(sql, [this.name]).then(result => {
@@ -222,6 +250,7 @@ class League{
                 console.log("This league does not currently have any teams.");
                 return;
             }
+            var divBack = this.teams
             result.rows.forEach(team => {
                 if (!this.teams[team.name]){
                     this.teams[team.name] = new Team(team.name);
@@ -239,7 +268,6 @@ class League{
             console.log(e);
             return e;
         })
-        
     }
 }
 
@@ -256,7 +284,7 @@ class Division{
         client.query(sql, [name, division, league]).then(result => {
             var id = result.rows[0].teamid
             var team = new Team(id, name);
-            team.addPlayer(first, last, phone, email, age, true);
+            team.addPlayer(first, last, phone, email, age, league, division, true);
             this.teams[name] = team;
             return {success: true};
         }).catch(e => {
@@ -300,21 +328,35 @@ class Team{
         this.players = {}
     }
 
-    addPlayer(fn, ln, p, e, a){
+    addPlayer(first, last, phone, email, league, div, age){
         var playerid;
         var sql = 'INSERT INTO player (firstName, lastName, phone, email, age) VALUES ($1, $2, $3, $4, $5) RETURNING playerId;';
-        client.query(sql, [fn, ln, p, e, a]).then(res => {
+        client.query(sql, [first, last, phone, email, age]).then(res => {
             playerid = res.rows[0].playerid;
-            this.players[playerid] = new Player(fn, ln, e,  p);
+            console.log("new player with ID: " + playerid);
+            this.players[playerid] = new Player(first, last, age, email, phone);
             this.playerToTeam(playerid, true);
+            this.createPlayerStats(league, div, playerid);
         }).catch(e => {
             console.log("\n ERROR! Player could not be created!\n");
             console.log(e);
             return e;
         })
-        
     }
 
+    createPlayerStats(league, div, pid){
+        var sql="INSERT INTO playerStats (league, division, player) VALUES ($1, $2, $3) RETURNING *;"
+        client.query(sql, [league, div, pid]).then(res => {
+            if (res.rows[0] === null){
+                console.log("Could not add Stats to player with ID: " + pid +" in " + league + " division " + div);
+            }
+            console.log("Created Stats for player with ID: " + pid +" in " + league + " division " + div);
+        }).catch((err) => {
+            console.log("Couldn't create player stats")
+            console.log(err)
+        })
+    }
+    
     playerToTeam(player, captain){
         //Connects a player to a team
         var sql = 'INSERT INTO teamplayer (playerid, teamId, isCaptain) VALUES ($1, $2, $3);';

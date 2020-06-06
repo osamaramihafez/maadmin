@@ -81,7 +81,7 @@ export class TeamRegistration extends Component {
 
     render() {
         return (
-            <div className="PlayerRegistration">
+            <div className="Registration">
                 <h2>Add a new player</h2>
                 <hr></hr>
                 <h5>Player info</h5>

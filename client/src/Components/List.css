@@ -4,19 +4,19 @@ hr{
     width: 100%;
 }
 
-.teamList{
+.List{
     flex-grow: 1;
     display: flex;
     flex-direction: column;
     margin: 1%;
 }
 
-.teamList Button{
+.List Button{
     flex-grow: flex;
     width: 100%;
 }
 
-.teamContainer{
+.Container{
     border: solid 6px rgb(162, 202, 193);
     color: rgb(162, 202, 193);
     border-radius: 5px;
@@ -29,7 +29,7 @@ hr{
     width: 100%;
 }
 
-.teamPanel{
+.Panel{
     /* position: absolute; */
     margin: 0% 10%;
     display: flex;
