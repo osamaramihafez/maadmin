@@ -20,8 +20,7 @@ app.listen(port, function () {
 });
 
 //The current logged in administrator... this wouldn't work if we had multiple users:
-admin = new maadmin.Admin();
-
+var admin = new maadmin.Admin();
 
 //CRUD cheatsheet:
 // Create  POST
@@ -99,8 +98,11 @@ app.post('/maadmin/api/addTeam', (req,res) => {
   var division = req.body.division;
   var league = req.body.league;
   var age = req.body.age;
+  // How we want to cleanly add a team:
+  // admin.getLeague(league).getDivision(division).addTeam();
+  
   //Add the player and team to the database (and connect them to the team)
-  admin.addTeam(first, last, phone, email, age, teamName, division, league);
+  admin.leagues[league].division[division].addTeam(first, last, phone, email, age, teamName, division, league);
   res.set('Access-Control-Allow-Origin', '*');
   // res.status(200); // Or maybe not
 });
