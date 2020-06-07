@@ -1,5 +1,9 @@
+// Implementation of a division
+const team =require('./team')
+
 class Division{
-    constructor(id){
+    constructor(id, db){
+        this.db = db;
         this.numTeams = 0;
         this.totalMatches = 0;
         this.id = id;
@@ -8,7 +12,7 @@ class Division{
 
     addTeam(first, last, phone, email, age, name, division, league){
         var sql = 'INSERT INTO team (name, division, league) VALUES ($1, $2, $3) RETURNING *;';
-        client.query(sql, [name, division, league]).then(result => {
+        this.db.query(sql, [name, division, league]).then(result => {
             var id = result.rows[0].teamid
             var team = new Team(id, name);
             team.addPlayer(first, last, phone, email, age, league, division, true);
@@ -23,7 +27,7 @@ class Division{
 
     getTeamNames(respond){
         const sql = 'SELECT * from team where division=$1'
-        client.query(sql, [this.id]).then(result => {
+        this.db.query(sql, [this.id]).then(result => {
             if (result.rows[0] == null){
                 console.log("This league does not currently have any teams.");
                 respond({teams:[]});

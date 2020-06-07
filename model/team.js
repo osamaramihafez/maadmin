@@ -1,14 +1,15 @@
+// Implementation of a team
+require('./player')
+
 class Team{
-    constructor(id, name){
-        this.id = id;
+    constructor(name){
         this.name = name;
-        this.players = {}
     }
 
     addPlayer(first, last, phone, email, league, div, age){
         var playerid;
         var sql = 'INSERT INTO player (firstName, lastName, phone, email, age) VALUES ($1, $2, $3, $4, $5) RETURNING playerId;';
-        client.query(sql, [first, last, phone, email, age]).then(res => {
+        this.db.query(sql, [first, last, phone, email, age]).then(res => {
             playerid = res.rows[0].playerid;
             console.log("new player with ID: " + playerid);
             this.players[playerid] = new Player(first, last, age, email, phone);
@@ -22,8 +23,9 @@ class Team{
     }
 
     createPlayerStats(league, div, pid){
+        //Creates a players default stats while indicating the league and division they belong to
         var sql="INSERT INTO playerStats (league, division, player) VALUES ($1, $2, $3) RETURNING *;"
-        client.query(sql, [league, div, pid]).then(res => {
+        this.db.query(sql, [league, div, pid]).then(res => {
             if (res.rows[0] === null){
                 console.log("Could not add Stats to player with ID: " + pid +" in " + league + " division " + div);
             }
@@ -37,7 +39,7 @@ class Team{
     playerToTeam(player, captain){
         //Connects a player to a team
         var sql = 'INSERT INTO teamplayer (playerid, teamId, isCaptain) VALUES ($1, $2, $3);';
-        client.query(sql, [player, this.id, captain]).then(res => {
+        this.db.query(sql, [player, this.id, captain]).then(res => {
             return;
         }).catch(e => {
             console.log("\n ERROR! Player cannot be added to team\n");
