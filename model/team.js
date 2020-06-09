@@ -1,9 +1,10 @@
 // Implementation of a team
-require('./player')
+const Player = require('./player')
 
 class Team{
     constructor(name){
         this.name = name;
+        this.players;
     }
 
     addPlayer(first, last, phone, email, league, div, age){
@@ -12,7 +13,7 @@ class Team{
         this.db.query(sql, [first, last, phone, email, age]).then(res => {
             playerid = res.rows[0].playerid;
             console.log("new player with ID: " + playerid);
-            this.players[playerid] = new Player(first, last, age, email, phone);
+            this.players[playerid] = new Player.Player(first, last, age, email, phone);
             this.playerToTeam(playerid, true);
             this.createPlayerStats(league, div, playerid);
         }).catch(e => {

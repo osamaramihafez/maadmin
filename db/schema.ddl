@@ -21,16 +21,6 @@ CREATE TABLE leagueAdmin(
   constraint aLeagueFk foreign key (name) references league(name) on update cascade on delete cascade
 );
 
--- Currently not using season, I think I can go about without it.
--- CREATE TABLE season(
---   seasonId SERIAL PRIMARY KEY,
---   league VARCHAR(20),
---   startDate TIMESTAMP,
---   endDate TIMESTAMP,
-
---   constraint leagueFk foreign key (league) references admin(username) on update cascade on delete cascade
--- );
-
 CREATE TABLE division(
   divId INTEGER NOT NULL,
   league VARCHAR(50) NOT NULL,

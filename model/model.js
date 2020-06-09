@@ -12,9 +12,11 @@ db.connect()
 .then(() => console.log('Connected to db successfully'))
 .catch(e => console.log(e));
 
-require(league.js);
+const League = require('./league.js')
 
 var users = {};
+
+module.exports.users =  users;
 
 function isFunction(functionToCheck) {
     return functionToCheck && {}.toString.call(functionToCheck) === '[object Function]';
@@ -39,7 +41,11 @@ module.exports.createAccount = function createAdmin(username, password, respond)
     })
 }
 
-module.exports.login = login(username, password, respond){
+module.exports.logout = function logout(username){
+    delete users[username];
+}
+
+module.exports.login = function login(username, password, respond){
     /*This login function should do two things:
          1. Check to see if the login credentials for an admin are valid
          2. Create an admin object based on the valid credentials
@@ -59,6 +65,7 @@ module.exports.login = login(username, password, respond){
         if (password === correctPass){
             login.success = true
             admin = new Admin(username);
+            users[username] = admin;
             console.log("Password correct.");
             if (isFunction(respond)) respond(login);
             return;
@@ -80,6 +87,10 @@ class Admin{
         this.leagues = {};
     }
 
+    getLeague(league){
+        return this.leagues[league];
+    }
+
     getLeagueNames(respond){
         var sql = 'SELECT leagueName FROM leagueAdmin WHERE admin=$1;';
         var name = this.name
@@ -94,7 +105,7 @@ class Admin{
             //We want to create a league object for each league that we fetched so that we can access them later.
             result.rows.forEach(sqleague => {
                 if (!this.leagues[sqleague.leaguename]){
-                    this.leagues[sqleague.leaguename] = new League(sqleague.leaguename, db);
+                    this.leagues[sqleague.leaguename] = new League.League(sqleague.leaguename, db);
                     console.log("We got a league called: " + sqleague.leaguename);
                 }
             })
@@ -128,7 +139,7 @@ class Admin{
         })
     }
 
-    async addLeague(leagueName, numDivs, respond){
+    async addLeague(leagueName, numDivs, capacity, respond){
 
         //First we will add a league to the database, then connect it to an admin using connectLeague
         var sql = 'INSERT INTO league (leaguename) VALUES ($1) RETURNING *;';
@@ -143,8 +154,8 @@ class Admin{
             }
 
             // Now that we've added the league, we first want to add some divisions to the league
-            var league = new League(leagueName, db);
-            league.addDivisions(parseInt(numDivs), () => {
+            var league = new League.League(leagueName, db);
+            league.addDivisions(parseInt(numDivs), capacity, () => {
                 this.leagues[leagueName] = league;
 
                 //We also want to connect the league to the admin

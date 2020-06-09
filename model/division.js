@@ -10,6 +10,10 @@ class Division{
         this.teams = {};
     }
 
+    getTeam(team){
+        return this.teams[team];
+    }
+
     addTeam(first, last, phone, email, age, name, division, league){
         var sql = 'INSERT INTO team (name, division, league) VALUES ($1, $2, $3) RETURNING *;';
         this.db.query(sql, [name, division, league]).then(result => {

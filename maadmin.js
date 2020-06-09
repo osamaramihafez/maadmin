@@ -39,14 +39,16 @@ app.post('/maadmin/api/createAccount', (req, res) => {
 })
 
 app.post('/maadmin/api/logout', (req, res) => {
-  maadmin.logout(username);
+  maadmin.logout(req.body.username);
   res.set('Access-Control-Allow-Origin', '*');
   res.status(200);
   res.json({success: true});
 })
 
 app.get('/maadmin/api/:user/leagueNames', (req, res) => {
-  maadmin.getLeagueNames(leagueNames => {
+  var user = maadmin.users[req.params.user];
+
+  user.getLeagueNames(leagueNames => {
     res.set('Access-Control-Allow-Origin', '*');
     res.status(200);
     res.json(leagueNames)
@@ -54,7 +56,10 @@ app.get('/maadmin/api/:user/leagueNames', (req, res) => {
 })
 
 app.get('/maadmin/api/:user/teamList/:league', (req, res) => {
-  admin.leagues[req.params.league].getTeamNames(teams => {
+  var user = maadmin.users[req.params.user];
+  console.log(req.params.user);
+  
+  user.getLeague(req.params.league).getTeamNames(teams => {
     res.set('Access-Control-Allow-Origin', '*');
     res.status(200);
     res.json(teams);
@@ -62,8 +67,9 @@ app.get('/maadmin/api/:user/teamList/:league', (req, res) => {
 })
 
 app.get('/maadmin/api/:user/playerList/:league', (req, res) => {
-  console.log("Getting player names for league: " + req.params.league);
-  admin.leagues[req.params.league].getPlayerNames(teams => {
+  var user = maadmin.users[req.params.user];
+
+  user.getLeague(req.params.league).getPlayerNames(teams => {
     res.set('Access-Control-Allow-Origin', '*');
     res.status(200);
     res.json(teams);
@@ -71,7 +77,10 @@ app.get('/maadmin/api/:user/playerList/:league', (req, res) => {
 })
 
 app.post('/maadmin/api/:user/createLeague', (req, res) => {
-  admin.addLeague(req.body.leaguename, req.body.numDivs, leagueName => {
+  //Create a league, body contains leaguename and numdivs (should also include capacity?)
+  var user = maadmin.users[req.params.user];
+
+  user.addLeague(req.body.leaguename, req.body.numDivs, req.body.divCapacity, leagueName => {
     res.set('Access-Control-Allow-Origin', '*');
     res.status(200);
     res.json(leagueName);
@@ -89,16 +98,20 @@ app.post('/maadmin/api/:user/addTeam', (req,res) => {
   var age = req.body.age;
   // How we want to cleanly add a team:
   // admin.getLeague(league).getDivision(division).addTeam();
-  
+  var user = maadmin.users[req.params.user];
+  console.log(user);
   //Add the player and team to the database (and connect them to the team)
-  admin.leagues[league].division[division].addTeam(first, last, phone, email, age, teamName, division, league);
+  user.getLeague(league).getDivision(division).addTeam(first, last, phone, email, age, teamName, division, league);
   res.set('Access-Control-Allow-Origin', '*');
   // res.status(200); // Or maybe not
 });
 
 app.post('/maadmin/api/:user/addDivision', (req, res) => {
-  league = admin.leagues[req.body.leaguename];
-  league.addDivison(req.body.leaguename, req.body.division, leagueName => {
+  var league = admin.leagues[req.body.leaguename];
+  var league = admin.leagues[req.body.capacity];
+  var user = maadmin.users[req.params.user];
+
+  user.getLeague(league).addDivison(req.body.leaguename, req.body.division, leagueName => {
     res.set('Access-Control-Allow-Origin', '*');
     res.status(200);
     res.json(leagueName);

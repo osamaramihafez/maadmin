@@ -1,5 +1,5 @@
 // Implementation of a league
-const division = require('./division');
+const Division = require('./division');
 
 class League{
 
@@ -10,17 +10,27 @@ class League{
         this.teams = {};
     }
 
-    async addDivisions(numDivs, connect){
+    getDivision(div){
+        console.log(this.divisions);
+        console.log(div);
+        return this.divisions[div];
+    }
+
+    getTeam(team){
+        return this.teams[team];
+    }
+
+    async addDivisions(numDivs, capacity, connect){
         for(var div = 1; div<numDivs+1 ; div++){
             // Current div capacity will always be 16, we can change this later.
-            var sql = 'INSERT INTO div (divId, league, capacity) VALUES ($1, $2, $3);';
-            await this.db.query(sql, [div, this.name]).then(res => {
+            var sql = 'INSERT INTO division (divId, league, capacity) VALUES ($1, $2, $3);';
+            await this.db.query(sql, [div, this.name, capacity]).then(res => {
                 if (res.rows[0] === null){
                     console.log('Division not added for some reason?');
                     return;
                 }
                 console.log("Division " + div + " Created");
-                this.divisions[toString(div)] = new division.Division(div, this.db);
+                this.divisions[toString(div)] = new Division.Division(div, this.db);
             }).catch(e => {
                 console.log("\nDIVISION CREATION ERROR!\n");
                 console.log(e);
@@ -31,7 +41,7 @@ class League{
     }
 
     async getDivisions(){
-        var sql = 'SELECT divId from div where league=$1;';
+        var sql = 'SELECT divId from division where league=$1;';
         await this.db.query(sql, [this.name]).then(res => {
             var divBack = this.divs;
             res.rows.forEach((div) => {

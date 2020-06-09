@@ -7,8 +7,8 @@ import './navigation.css'
 
 export class LeagueList extends Component {
     
-    constructor(){
-        super();
+    constructor(props){
+        super(props);
         this.state = {
             leagues: [],
             schedule: null,
@@ -39,7 +39,7 @@ export class LeagueList extends Component {
         this.setState({
             create: false
         })
-        axios.get('/maadmin/api/leagueNames').then((res) => {
+        axios.get('/maadmin/api/' + this.props.username + '/leagueNames').then((res) => {
             console.log(res.data)
             if (res.data.leagues){
                 this.setState({
@@ -51,7 +51,7 @@ export class LeagueList extends Component {
 
     componentDidMount(){
         console.log("attempting to recieve leagues");
-        axios.get('/maadmin/api/leagueNames').then((res) => {
+        axios.get('/maadmin/api/' + this.props.username + '/leagueNames').then((res) => {
             console.log(res.data)
             if (res.data.leagues){
                 this.setState({
@@ -67,7 +67,7 @@ export class LeagueList extends Component {
         if (this.state.create === true){
             //We want to check if the create button was clicked, if so then we display the create a league form
             return(
-                <LeagueForm back={this.leagueCreated.bind(this)} />
+                <LeagueForm back={this.leagueCreated.bind(this)} username={this.props.username}/>
             )
         } else if(this.state.leagueChosen === '' && this.state.leagues != null){
             //Map every league to a button
@@ -82,7 +82,7 @@ export class LeagueList extends Component {
         } else if (this.state.leagueChosen !== '') {
             //If a league has been chosen, switch to it's view
             return (
-                <League name={this.state.leagueChosen} />
+                <League name={this.state.leagueChosen} username={this.props.username} />
             ) 
         }
 

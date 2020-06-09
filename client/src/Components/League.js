@@ -24,9 +24,9 @@ export class League extends Component {
     render() {
         var show;
         if (this.state.view === 'Teams'){
-            show = <TeamList league={this.state.leagueName} />
+            show = <TeamList username={this.props.username} league={this.state.leagueName} />
         } else if (this.state.view ==='Players'){
-            show = <PlayerList league={this.state.leagueName} />
+            show = <PlayerList username={this.props.username} league={this.state.leagueName} />
         }
             return (
                 <div>

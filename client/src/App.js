@@ -38,7 +38,7 @@ export class App extends Component {
 
     logout(){
         //We also need to logout by deleting the current admin inside of maadmin.js
-        axios.post('/maadmin/api/logout').then((res) => {
+        axios.post('/maadmin/api/logout', {username: this.state.admin}).then((res) => {
             this.setState({
                 loggedIn: false,
                 admin: ''
