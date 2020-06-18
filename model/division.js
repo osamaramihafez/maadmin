@@ -14,9 +14,10 @@ class Division{
         return this.teams[team];
     }
 
-    addTeam(first, last, phone, email, age, name, division, league){
+    addTeam(body){
+        //Add a team to the database.
         var sql = 'INSERT INTO team (name, division, league) VALUES ($1, $2, $3) RETURNING *;';
-        this.db.query(sql, [name, division, league]).then(result => {
+        this.db.query(sql, [body.firstName, body.lastName, body.phone, body.email, body.teamName, body.division, body.league, body.age]).then(result => {
             var id = result.rows[0].teamid
             var team = new Team(id, name);
             team.addPlayer(first, last, phone, email, age, league, division, true);

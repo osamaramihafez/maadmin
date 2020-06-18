@@ -139,27 +139,30 @@ class Admin{
         })
     }
 
-    async addLeague(leagueName, numDivs, capacity, respond){
-
-        //First we will add a league to the database, then connect it to an admin using connectLeague
+    async addLeague(body, respond){
+        /**
+         First we will add a league to the database, then connect it to an admin using connectLeague
+         body: the request body.
+         respond: the call back function. 
+         */
         var sql = 'INSERT INTO league (leaguename) VALUES ($1) RETURNING *;';
-        console.log(leagueName);
-        await db.query(sql, [leagueName]).then(result => {
+        console.log(body.leaguename);
+        await db.query(sql, [body.leaguename]).then(result => {
 
             //If we have null returned, what does that mean?
             if (result.rows[0] == null){
-                console.log("Did not add " + leagueName + " to leagues");
+                console.log("Did not add " + body.leaguename + " to leagues");
                 if (isFunction(respond)) respond({success: false});
                 return;
             }
 
             // Now that we've added the league, we first want to add some divisions to the league
-            var league = new League.League(leagueName, db);
-            league.addDivisions(parseInt(numDivs), capacity, () => {
-                this.leagues[leagueName] = league;
+            var league = new League.League(body.leaguename, db);
+            league.addDivisions(parseInt(body.numDivs), body.divCapacity, () => {
+                this.leagues[body.leaguename] = league;
 
                 //We also want to connect the league to the admin
-                this.connectLeague(leagueName);
+                this.connectLeague(body.leaguename);
                 if (isFunction(respond)) respond({success: true});
                 return;
             })
