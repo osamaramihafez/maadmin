@@ -32,8 +32,8 @@ class League{
                 console.log("Division " + div + " Created");
                 this.divisions[toString(div)] = new Division.Division(div, this.db);
             }).catch(e => {
-                console.log("\nDIVISION CREATION ERROR!\n");
-                console.log(e);
+                console.log("\nDIVISION CREATION ERROR!\n", e);
+               
                 return e;
             })
         }
@@ -45,14 +45,14 @@ class League{
         await this.db.query(sql, [this.name]).then(res => {
             var divBack = this.divs;
             res.rows.forEach((div) => {
-                if (!this.divs[div.divid]){
+                if (!this.divisions[div.divid]){
+                    this.divisions[div.divid] = new Division.Division(div.divid, this.db);
                     this.divs[div.divid] = new Division(div.divid, this.db);
                     console.log("Division: " + div.divid + " has been fetched");
                 }
             })
         }).catch(e => {
-            console.log("\nDIVISION FETCH ERROR!\n");
-            console.log(e);
+            console.log("\nDIVISION FETCH ERROR!\n", e);
             return e;
         })
     }
@@ -78,8 +78,7 @@ class League{
             if (isFunction(respond)) respond({teams: Object.keys(this.teams)});
             return;
         }).catch(e => {
-            console.log("\nTeam  FETCH ERROR!\n");
-            console.log(e);
+            console.log("\nTeam  FETCH ERROR!\n", e);
             return e;
         })
     }

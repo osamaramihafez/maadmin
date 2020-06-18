@@ -23,8 +23,7 @@ class Division{
             this.teams[name] = team;
             return {success: true};
         }).catch(e => {
-          console.log("\n*Some sort of error*\n");
-          console.log(e);
+          console.log("\n*Some sort of error*\n", e);
           return e;
         })
     }
@@ -47,8 +46,7 @@ class Division{
             if (isFunction(respond)) respond({teams: Object.keys(this.teams)});
             return;
         }).catch(e => {
-            console.log("\nLEAGUE FETCH ERROR!\n");
-            console.log(e);
+            console.log("\nLEAGUE FETCH ERROR!\n", e);
             return e;
         })
         

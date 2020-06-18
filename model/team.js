@@ -17,8 +17,7 @@ class Team{
             this.playerToTeam(playerid, true);
             this.createPlayerStats(league, div, playerid);
         }).catch(e => {
-            console.log("\n ERROR! Player could not be created!\n");
-            console.log(e);
+            console.log("\n ERROR! Player could not be created!\n", e);
             return e;
         })
     }
@@ -43,8 +42,7 @@ class Team{
         this.db.query(sql, [player, this.id, captain]).then(res => {
             return;
         }).catch(e => {
-            console.log("\n ERROR! Player cannot be added to team\n");
-            console.log(e);
+            console.log("\n ERROR! Player cannot be added to team\n", e);
             return e;
         })
     }
