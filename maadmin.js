@@ -55,6 +55,16 @@ app.get('/maadmin/api/:user/leagueNames', (req, res) => {
   });
 })
 
+app.get('/maadmin/api/:user/getDivisions/:league', (req, res) => {
+  var user = maadmin.users[req.params.user];
+  console.log(req.params.user);
+  
+  user.getLeague(req.params.league).getDivisions(teams => {
+    res.set('Access-Control-Allow-Origin', '*');
+    res.status(200);
+  });
+})
+
 app.get('/maadmin/api/:user/teamList/:league', (req, res) => {
   var user = maadmin.users[req.params.user];
   console.log(req.params.user);

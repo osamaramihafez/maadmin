@@ -106,6 +106,7 @@ class Admin{
             result.rows.forEach(sqleague => {
                 if (!this.leagues[sqleague.leaguename]){
                     this.leagues[sqleague.leaguename] = new League.League(sqleague.leaguename, db);
+                    // this.leagues[sqleague.leaguename].getDivisions(); //We need to make sure the leagues have their divisions attached to them
                     console.log("We got a league called: " + sqleague.leaguename);
                 }
             })

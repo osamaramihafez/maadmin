@@ -1,5 +1,10 @@
 // Implementation of a league
 const Division = require('./division');
+const teamClass = require('./team');
+
+function isFunction(functionToCheck) {
+    return functionToCheck && {}.toString.call(functionToCheck) === '[object Function]';
+};
 
 class League{
 
@@ -11,8 +16,6 @@ class League{
     }
 
     getDivision(div){
-        console.log(this.divisions);
-        console.log(div);
         return this.divisions[div];
     }
 
@@ -30,7 +33,7 @@ class League{
                     return;
                 }
                 console.log("Division " + div + " Created");
-                this.divisions[toString(div)] = new Division.Division(div, this.db);
+                this.divisions[div.toString()] = new Division.Division(div, this.db);
             }).catch(e => {
                 console.log("\nDIVISION CREATION ERROR!\n", e);
                
@@ -47,7 +50,6 @@ class League{
             res.rows.forEach((div) => {
                 if (!this.divisions[div.divid]){
                     this.divisions[div.divid] = new Division.Division(div.divid, this.db);
-                    this.divs[div.divid] = new Division(div.divid, this.db);
                     console.log("Division: " + div.divid + " has been fetched");
                 }
             })
@@ -67,7 +69,7 @@ class League{
             var divBack = this.teams
             result.rows.forEach(team => {
                 if (!this.teams[team.name]){
-                    this.teams[team.name] = new Team(team.name, this.db);
+                    this.teams[team.name] = new teamClass.Team(team.name, this.db);
                     console.log("We got a Team called: " + team.name);
                 } else {
                     this.teams[team.name] = divBack[team.name];
