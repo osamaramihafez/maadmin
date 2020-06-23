@@ -55,6 +55,27 @@ app.get('/maadmin/api/:user/leagueNames', (req, res) => {
   });
 })
 
+app.get('/maadmin/api/:user/getDivisions/:league', (req, res) => {
+  var user = maadmin.users[req.params.user];
+  console.log(req.params.user);
+  
+  user.getLeague(req.params.league).getDivisions(() => {
+    res.set('Access-Control-Allow-Origin', '*');
+    res.status(200);
+  });
+})
+
+app.get('/maadmin/api/:user/getDivision/:league/:division', (req, res) => {
+  // Here we are returning an entire division class object, is this valid?.
+  var user = maadmin.users[req.params.user];
+  console.log(req.params.user);
+  
+  var d = user.getLeague(req.params.league).getDivision();
+  res.set('Access-Control-Allow-Origin', '*');
+  res.json({division: d});
+  res.status(200);
+})
+
 app.get('/maadmin/api/:user/teamList/:league', (req, res) => {
   var user = maadmin.users[req.params.user];
   console.log(req.params.user);
