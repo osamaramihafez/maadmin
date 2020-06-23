@@ -62,7 +62,7 @@ export class TeamRegistration extends Component {
     }
 
     register(){
-        axios.post('/maadmin/api/addTeam', this.state)
+        axios.post('/maadmin/api/' + this.props.username + '/addTeam', this.state)
         .then( (res) => {
             console.log('Adding Team')
             console.log(res);

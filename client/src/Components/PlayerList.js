@@ -15,7 +15,7 @@ export class PlayerList extends Component {
     }
 
     componentDidMount(){
-        axios.get('/maadmin/api/playerList/' + this.props.league).then((res) => {
+        axios.get('/maadmin/api/' + this.props.username + '/playerList/' + this.props.league).then((res) => {
             console.log(res.data)
             this.setState({
                 players: res.data.players
@@ -24,7 +24,7 @@ export class PlayerList extends Component {
     }
 
     updateList(){
-        axios.get('/maadmin/api/playerList/' + this.props.league).then((res) => {
+        axios.get('/maadmin/api/' + this.props.username + '/playerList/' + this.props.league).then((res) => {
             console.log(res.data)
             this.setState({
                 players: res.data.players
@@ -48,7 +48,7 @@ export class PlayerList extends Component {
         }
         return (
             <div className = 'Panel'>
-                <PlayerRegistration league={this.props.league} callBack={this.updateList.bind(this)} />
+                <PlayerRegistration username={this.props.username} league={this.props.league} callBack={this.updateList.bind(this)} />
                 {playerList}
             </div>
         ) 

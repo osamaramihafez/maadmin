@@ -3,11 +3,12 @@ import axios from 'axios'
 import Button from 'react-bootstrap/Button'
 
 export class LeagueForm extends Component {
-    constructor(){
-        super();
+    constructor(props){
+        super(props);
         this.state = {
             leaguename: '',
-            numDivs: 0
+            numDivs: 0,
+            DivCapacity: 0
         }
     }
 
@@ -23,8 +24,14 @@ export class LeagueForm extends Component {
         });
     }
 
+    handleDivCapacity(e){
+        this.setState({
+            divCapacity: e.target.value
+        });
+    }
+
     createLeague(){
-        axios.post('/maadmin/api/createLeague', this.state)
+        axios.post('/maadmin/api/' + this.props.username + '/createLeague', this.state)
         .then( (res) => {
             console.log('Created a new league')
             console.log(res);
@@ -48,6 +55,9 @@ export class LeagueForm extends Component {
                     <option>4</option>
                     <option>5</option>
                 </select>
+                <br></br>
+                {/* Should probably switch all form buttons to be of type submit */}
+                <label>Division Capacity: </label> <input type='number' min='1' max='16' name='divCapacity' onChange={this.handleDivCapacity.bind(this)}></input>
                 <hr></hr>
                 <Button variant='success' onClick={this.createLeague.bind(this)}>Create League</Button>
             </div>

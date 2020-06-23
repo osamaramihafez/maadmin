@@ -5,8 +5,8 @@ import axios from 'axios'
 
 export class TeamRegistration extends Component {
 
-    constructor(){
-        super();
+    constructor(props){
+        super(props);
         this.state = {
             firstName: '',
             lastName: '',
@@ -59,7 +59,7 @@ export class TeamRegistration extends Component {
     }
 
     registerPlayer(){
-        axios.post('/maadmin/api/addPlayer', this.state)
+        axios.post('/maadmin/api/' + this.props.username + '/addPlayer', this.state)
         .then( (res) => {
             console.log('Adding Player')
             console.log(res);
@@ -72,7 +72,7 @@ export class TeamRegistration extends Component {
             division: this.state.division,
             captain: this.state.firstName + ' ' + this.lastName
         }
-        axios.post('/maadmin/api/addTeam', body)
+        axios.post('/maadmin/api/' + this.props.username + '/addTeam', body)
         .then( (res) => {
             console.log('Adding Team')
             console.log(res);

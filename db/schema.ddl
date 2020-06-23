@@ -1,5 +1,9 @@
+CREATE TABLE organization(
+  name VARCHAR(50) PRIMARY KEY
+);
+
 CREATE TABLE league(
-  leaguename VARCHAR(50) PRIMARY KEY
+  league VARCHAR(50) PRIMARY KEY
 );
 
 CREATE TABLE admin
@@ -9,30 +13,20 @@ CREATE TABLE admin
 );
 
 CREATE TABLE leagueAdmin(
-  leaguename VARCHAR(50),
+  league VARCHAR(50),
   admin VARCHAR(20),
 
-  constraint alPk primary key (admin, leaguename),
+  constraint alPk primary key (admin, name),
   constraint adminFk foreign key (admin) references admin(username) on update cascade on delete cascade,
-  constraint aLeagueFk foreign key (leaguename) references league(leaguename) on update cascade on delete cascade
+  constraint aLeagueFk foreign key (name) references league(name) on update cascade on delete cascade
 );
-
--- Currently not using season, I think I can go about without it.
--- CREATE TABLE season(
---   seasonId SERIAL PRIMARY KEY,
---   league VARCHAR(20),
---   startDate TIMESTAMP,
---   endDate TIMESTAMP,
-
---   constraint leagueFk foreign key (league) references admin(username) on update cascade on delete cascade
--- );
 
 CREATE TABLE division(
   divId INTEGER NOT NULL,
   league VARCHAR(50) NOT NULL,
   capacity INTEGER,
 
-  constraint leagueDivFk foreign key (league) references league(leaguename) on update cascade on delete cascade,
+  constraint leagueDivFk foreign key (league) references league(name) on update cascade on delete cascade,
   constraint divPk primary key (divId, league)
 );
 

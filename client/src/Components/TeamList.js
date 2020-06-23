@@ -16,7 +16,7 @@ export class Teams extends Component {
     }
 
     componentDidMount(){
-        axios.get('/maadmin/api/teamList/' + this.props.league).then((res) => {
+        axios.get('/maadmin/api/'+ this.props.username +'/teamList/' + this.props.league).then((res) => {
             console.log(res.data)
             this.setState({
                 teams: res.data.teams
@@ -25,7 +25,7 @@ export class Teams extends Component {
     }
 
     updateList(){
-        axios.get('/maadmin/api/teamList/' + this.props.league).then((res) => {
+        axios.get('/maadmin/api/' + this.props.username + '/teamList/' + this.props.league).then((res) => {
             console.log(res.data)
             this.setState({
                 teams: res.data.teams
@@ -49,7 +49,7 @@ export class Teams extends Component {
         }
         return (
             <div className = 'Panel'>
-                <TeamRegistration league={this.props.league} callBack={this.updateList.bind(this)} />
+                <TeamRegistration username={this.props.username} league={this.props.league} callBack={this.updateList.bind(this)} />
                 {teamList}
             </div>
         ) 
