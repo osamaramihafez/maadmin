@@ -17,7 +17,8 @@ html{
   /* background: linear-gradient(rgb(25, 58, 70) 10%,rgba(38, 49, 21, 0.9)); */
   /* background: linear-gradient(rgb(218, 218, 218) 10%, rgba(175, 153, 153, 0.7)); */
   /* background: linear-gradient(rgb(16, 49, 80, 0.5) 60%, rgba(0,0,0,0.5)); */
-  background: linear-gradient(rgb(31, 146, 65, 0.8) 80%,rgba(27, 88, 52, 0.7));
+  /* background: linear-gradient(rgb(31, 146, 65, 0.8) 80%,rgba(27, 88, 52, 0.7)); */
+  background: rgba(101, 114, 105);
 
 }
 

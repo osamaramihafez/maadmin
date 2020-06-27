@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import Button from 'react-bootstrap/Button'
+import axios from 'axios'
 import TeamList from './TeamList' 
 import PlayerList from './PlayerList' 
 import './navigation.css'
@@ -19,6 +20,10 @@ export class League extends Component {
         this.setState({
             view: v
         })
+    }
+
+    componentDidMount(){
+        axios.get('/maadmin/api/'+ this.props.username  +'/getDivisions/' + this.state.leagueName);
     }
 
     render() {
