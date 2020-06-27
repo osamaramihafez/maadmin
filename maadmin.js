@@ -6,16 +6,23 @@ const express = require('express');
 const path = require('path');
 const bodyParser = require('body-parser');
 const maadmin = require('./model/model.js');
+const sessions = require('client-sessions');
+const bcrypt = require('bcryptjs');
 
 var app = express();
 app.use(express.static(path.join(__dirname, 'build')));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+app.use(session({
+  cookieName: 'session',
+  secret: 'nabsdj65r65ytsd',
+  duration: 30*60*1000,  //30 seconds
+  httpOnly: true, // Doesn't let JS code access cookies
+  ephemeral: true //
+}));
 app.listen(port, function () {
     console.log('maadmin app listening on port ' + port);
 });
-
-//The current logged in administrator... this wouldn't work if we had multiple users:
 
 //All API requests can be seen below:
 app.post('/maadmin/api/login', (req, res) => {
@@ -24,6 +31,10 @@ app.post('/maadmin/api/login', (req, res) => {
   var password = req.body.password;
   maadmin.login(username, password, result => {
     res.set('Access-Control-Allow-Origin', '*');
+    if(result.success){
+      //This is where we store the session for this user.
+      req.session.userId = username //Not secure because anyone with the username can access the session, should change to random key probably.
+    }
     res.json(result);
   });
 })
