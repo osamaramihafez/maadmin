@@ -15,8 +15,6 @@ app.listen(port, function () {
     console.log('maadmin app listening on port ' + port);
 });
 
-//The current logged in administrator... this wouldn't work if we had multiple users:
-
 //All API requests can be seen below:
 app.post('/maadmin/api/login', (req, res) => {
   //Handle login request

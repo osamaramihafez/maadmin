@@ -50,9 +50,17 @@ class Division{
             console.log("\nLEAGUE FETCH ERROR!\n", e);
             return e;
         })
-        
     }
 
+    addMatches(){
+        var tname = Object.keys(this.teams);
+        var team; var match;
+        for (var t; t<tname.length; t++){
+            team = this.teams[t];
+            match = team.addMatch(); //addMatch should return a match
+            (match)
+        }
+    }
 }
 
 module.exports.Division = Division;
